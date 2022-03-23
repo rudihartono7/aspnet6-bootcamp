@@ -4,11 +4,8 @@ public class Tweet
 {
     public int Id { get; set; }
     public string Title { get; set; }
-    public string Desc { get; set; }
-    public int TotalRetweet { get; set; }
-    public string LinkImage { get; set; }
-    public User User { get; set; }
-    private int TotalLike { get; set; }
+    public int UserID { get; set; }
+    public int TotalLike { get; set; }
 
     public Tweet(int id, string title, string desc)
     {
@@ -19,10 +16,5 @@ public class Tweet
         }
 
         Title = title;
-        Desc = desc;
-    }
-
-    public void PostBy(User user){
-        User = user;
     }
 }
