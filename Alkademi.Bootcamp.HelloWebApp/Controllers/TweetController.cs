@@ -9,9 +9,11 @@ namespace Alkademi.Bootcamp.HelloWebApp.Controllers
     {
         List<TweetViewModel> _listTweet = new List<TweetViewModel>();
         private readonly ITweetService _tweetService;
-        public TweetController(ITweetService tweetService)
+        private readonly IFileService _fileService;
+        public TweetController(ITweetService tweetService, IFileService fileService)
         {
             _tweetService = tweetService;
+            _fileService = fileService;
             _listTweet = new List<TweetViewModel>(){
             new TweetViewModel(1, "WhatsApp cofounder: It's time to delete Facebook", "WhatsApp cofounder: It's time to delete Facebook")
             {
@@ -36,9 +38,28 @@ namespace Alkademi.Bootcamp.HelloWebApp.Controllers
         };
         }
         // GET: TweetController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(_tweetService.GetTweets());
+            var data = await _fileService.Read();
+            
+            try{
+                
+            var result = System.IO.File.ReadAllLines("C:\\Alkademi.txt");
+            
+                }
+                catch(DirectoryNotFoundException){
+                    ViewBag.ErrorMessage = $"Tidak ada directory D di komputer anda";
+                }
+                catch(FileNotFoundException){
+                    ViewBag.ErrorMessage = "File yang ada akan baca tidak ditemukan";
+                }
+                catch(Exception ex){
+                ViewBag.ErrorMessage = $"Ada error di sini pak: {ex.Message}";
+            }
+            
+            return View(data);
+
+            //return View(_tweetService.GetTweets());
         }
 
         // GET: TweetController/Details/5
@@ -50,13 +71,13 @@ namespace Alkademi.Bootcamp.HelloWebApp.Controllers
         // GET: TweetController/Create
         public ActionResult Create()
         {
-            return View(new TweetViewModel(1, "Tweet ", "Tweet desc"));
+            return View(new TweetViewModel(1, "New Tweet", "Lot of information"));
         }
 
         // POST: TweetController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(TweetViewModel collection)
+        public async Task<ActionResult> Create(TweetViewModel collection)
         {
             if(!ModelState.IsValid)
             {
@@ -65,6 +86,8 @@ namespace Alkademi.Bootcamp.HelloWebApp.Controllers
 
             try
             {
+                await _fileService.Write(collection);
+
                 return RedirectToAction(nameof(Index));
             }
             catch

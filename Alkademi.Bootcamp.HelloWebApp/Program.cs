@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ITweetService, TweetService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 #endregion
 
