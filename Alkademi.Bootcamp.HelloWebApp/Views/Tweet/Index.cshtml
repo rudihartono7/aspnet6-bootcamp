@@ -2,60 +2,38 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "_NewLayout";
 }
-
-<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<p class="text-danger">@ViewBag.ErrorMessage</p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Desc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalRetweet)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LinkImage)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Desc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalRetweet)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LinkImage)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+<!-- Custom content with heading -->
+<div class="col-lg-6">
+<small class="text-light fw-semibold">Custom content</small>
+<div class="demo-inline-spacing mt-3">
+    <div class="list-group">
+        @foreach (var item in Model)
+        {
+         <a
+        href="javascript:void(0);"
+        class="list-group-item list-group-item-action flex-column align-items-start active"
+        >
+            <div class="d-flex justify-content-between w-100">
+            <h6>@item.Title</h6>
+            <small>3 days ago</small>
+            </div>
+            <p class="mb-1">
+            @item.Desc
+            </p>
+            <small>Donec id elit non mi porta.</small>
+        </a>   
+        }
+    </div>
+</div>
+</div>
+<!--/ Custom content with heading -->
+</div>

@@ -41,22 +41,26 @@ namespace Alkademi.Bootcamp.HelloWebApp.Controllers
         public async Task<ActionResult> Index()
         {
             var data = await _fileService.Read();
-            
-            try{
-                
-            var result = System.IO.File.ReadAllLines("C:\\Alkademi.txt");
-            
-                }
-                catch(DirectoryNotFoundException){
-                    ViewBag.ErrorMessage = $"Tidak ada directory D di komputer anda";
-                }
-                catch(FileNotFoundException){
-                    ViewBag.ErrorMessage = "File yang ada akan baca tidak ditemukan";
-                }
-                catch(Exception ex){
+
+            try
+            {
+
+                var result = System.IO.File.ReadAllLines("C:\\Alkademi.txt");
+
+            }
+            catch (DirectoryNotFoundException)
+            {
+                ViewBag.ErrorMessage = $"Tidak ada directory D di komputer anda";
+            }
+            catch (FileNotFoundException)
+            {
+                ViewBag.ErrorMessage = "File yang ada akan baca tidak ditemukan";
+            }
+            catch (Exception ex)
+            {
                 ViewBag.ErrorMessage = $"Ada error di sini pak: {ex.Message}";
             }
-            
+
             return View(data);
 
             //return View(_tweetService.GetTweets());
@@ -79,7 +83,7 @@ namespace Alkademi.Bootcamp.HelloWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(TweetViewModel collection)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(collection);
             }

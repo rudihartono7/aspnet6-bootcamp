@@ -5,13 +5,33 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Hello Web App",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             "program": "${workspaceFolder}/Alkademi.Bootcamp.HelloWebApp/bin/Debug/net6.0/Alkademi.Bootcamp.HelloWebApp.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Alkademi.Bootcamp.HelloWebApp",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "ChatGroup App",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Alkademi.Bootcamp.ChatGroupApp/bin/Debug/net6.0/Alkademi.Bootcamp.ChatGroupApp.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Alkademi.Bootcamp.ChatGroupApp",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
