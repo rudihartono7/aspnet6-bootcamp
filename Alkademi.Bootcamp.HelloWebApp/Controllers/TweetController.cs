@@ -62,12 +62,12 @@ namespace Alkademi.Bootcamp.HelloWebApp.Controllers
             }
 
             return View(data);
-
-            //return View(_tweetService.GetTweets());
         }
 
-        // GET: TweetController/Details/5
-        public ActionResult Details(int id)
+        // GET: TweetController/Details?id=5
+        // Tweet/Details?id=
+        // Tweet/Details/{id}  
+        public ActionResult Details([FromQuery]int id)
         {
             return View();
         }
