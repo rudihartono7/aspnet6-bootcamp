@@ -11,7 +11,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Entities
         }
 
         public int Id { get; set; }
-        public int Nama { get; set; }
+        public string Nama { get; set; }
         public string Deskripsi { get; set; } = null!;
         public string? Icon { get; set; }
 
