@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Trisatech.Kamlinko.WebApp.Datas;
+using Trisatech.Kamlinko.WebApp.Interfaces;
+using Trisatech.Kamlinko.WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,11 @@ builder.Services.AddDbContext<KamlinkoDbContext>(
                 .EnableDetailedErrors()
         );
 
+#region  Business Services Injection
+
+builder.Services.AddScoped<IKategoriService, KategoriService>();
+
+#endregion
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

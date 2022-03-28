@@ -28,7 +28,7 @@
             "name": "KamlinkoApp",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "kamlinko-build",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/Trisatech.Kamlinko.WebApp/bin/Debug/net6.0/Trisatech.Kamlinko.WebApp.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Trisatech.Kamlinko.WebApp",

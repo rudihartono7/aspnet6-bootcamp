@@ -1,0 +1,36 @@
+@model IEnumerable<Trisatech.Kamlinko.WebApp.ViewModels.KategoriViewModel>
+@{
+    ViewData["Title"] = "Daftar Kategori";
+    int i = 0;
+}
+
+<table>
+    <thead>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Deskripsi</th>
+        <th>Action</th>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                i++;
+                <tr>
+                    <td>@i</td>
+                    <td>@item.Nama</td>
+                    <td>@item.Deskripsi</td>
+                    <td>
+                        <a href="kategori/detail/@item.Id">Detail</a>
+                        <a href="kategori/delete/@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }else {
+            <tr>
+                <td colspan="4">Data kosong</td>
+            </tr>
+        }
+    </tbody>
+</table>

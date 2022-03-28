@@ -8,6 +8,8 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Entities
         public Kategori()
         {
             ProdukKategoris = new HashSet<ProdukKategori>();
+            Nama = string.Empty;
+            Deskripsi = string.Empty;
         }
 
         public int Id { get; set; }
