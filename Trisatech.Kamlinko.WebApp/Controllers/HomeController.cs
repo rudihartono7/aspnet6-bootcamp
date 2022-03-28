@@ -7,23 +7,16 @@ namespace Trisatech.Kamlinko.WebApp.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly Kamlinko.WebApp.Datas.KamlinkoDbContext _dbContext;
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger, Kamlinko.WebApp.Datas.KamlinkoDbContext dbContext)
+    public HomeController(ILogger<HomeController> logger)
     {
-        _dbContext = dbContext;
         _logger = logger;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
-        var dbResult = await _dbContext.Kategoris.Select(x => new KategoriViewModel {
-            Nama = x.Nama,
-            Deskripsi = x.Deskripsi
-        }).ToListAsync();
-        
-        return View(dbResult);
+        return View();
     }
 
     public IActionResult Privacy()

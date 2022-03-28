@@ -20,6 +20,7 @@ builder.Services.AddDbContext<KamlinkoDbContext>(
 #region  Business Services Injection
 
 builder.Services.AddScoped<IKategoriService, KategoriService>();
+builder.Services.AddScoped<IProdukService, ProdukService>();
 
 #endregion
 builder.Services.AddControllersWithViews();

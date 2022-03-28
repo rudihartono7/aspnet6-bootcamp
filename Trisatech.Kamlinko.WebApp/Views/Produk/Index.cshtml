@@ -1,10 +1,11 @@
-@model IEnumerable<Trisatech.Kamlinko.WebApp.ViewModels.KategoriViewModel>
+@model IEnumerable<Trisatech.Kamlinko.WebApp.ViewModels.ProdukViewModel>
 @{
-    ViewData["Title"] = "Daftar Kategori";
+    ViewData["Title"] = "Daftar Produk";
     Layout = "_AdminLayout";
     int i = 0;
 }
 
+<h3>Data Produk</h3>
 <table>
     <thead>
         <th>No</th>
@@ -20,6 +21,7 @@
                 i++;
                 <tr>
                     <td>@i</td>
+                    <td><img src="@item.Gambar" height="100"/>Nama</td>
                     <td>@item.Nama</td>
                     <td>@item.Deskripsi</td>
                     <td>

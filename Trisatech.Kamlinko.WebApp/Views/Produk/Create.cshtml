@@ -1,11 +1,12 @@
-@model Trisatech.Kamlinko.WebApp.ViewModels.KategoriViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@model Trisatech.Kamlinko.WebApp.ViewModels.ProdukViewModel
 
 @{
     ViewData["Title"] = "Create";
     Layout = "_AdminLayout";
 }
 
-<h4>Create Kategori</h4>
+<h4>Create Produk</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -22,15 +23,26 @@
                 <span asp-validation-for="Deskripsi" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Harga" class="control-label"></label>
+                <input asp-for="Harga" class="form-control" />
+                <span asp-validation-for="Harga" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Gambar" class="control-label"></label>
+                <input asp-for="Gambar" class="form-control" />
+                <span asp-validation-for="Gambar" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="KategoriId" class="control-label"></label>
+                @Html.DropDownList("KategoriId", (List<SelectListItem>)ViewBag.KategoriDataSource)
+                <span asp-validation-for="KategoriId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
             </form>
-            
-
+    </div>
+</div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

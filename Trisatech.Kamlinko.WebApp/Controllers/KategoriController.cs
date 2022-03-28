@@ -10,9 +10,9 @@ namespace Trisatech.Kamlinko.WebApp.Controllers;
 public class KategoriController : Controller
 {
     private readonly IKategoriService _kategoriService;
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<KategoriController> _logger;
 
-    public KategoriController(ILogger<HomeController> logger, IKategoriService kategoriService)
+    public KategoriController(ILogger<KategoriController> logger, IKategoriService kategoriService)
     {
         _logger = logger;
         _kategoriService = kategoriService;
