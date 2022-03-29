@@ -5,16 +5,28 @@
     int i = 0;
 }
 
-<h3>Data Produk</h3>
-<table>
-    <thead>
-        <th>No</th>
-        <th>Nama</th>
-        <th>Deskripsi</th>
-        <th>Action</th>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
+
+<!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Tables /</span> Basic Tables</h4>
+              <!-- Responsive Table -->
+              <div class="card">
+                <h5 class="card-header">Responsive Table</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table">
+                    <thead>
+                      <tr class="text-nowrap">
+                        <th>#</th>
+                        <th>Kategori</th>
+                        <th>Gambar</th>
+                        <th>Nama</th>
+                        <th>Deskripsi</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @if (Model != null && Model.Any())
         {
             foreach (var item in Model)
             {
@@ -28,7 +40,7 @@
                             <p>@kategori.Nama</p>
                         }
                     </td>
-                    <td><img src="@item.Gambar" height="100" /></td>
+                    <td><img src="~/@item.GambarSrc" height="100" /></td>
                     <td>@item.Nama</td>
                     <td>@item.Deskripsi</td>
                     <td>
@@ -42,5 +54,10 @@
                 <td colspan="4">Data kosong</td>
             </tr>
         }
-    </tbody>
-</table>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!--/ Responsive Table -->
+            </div>
+            <!-- / Content -->

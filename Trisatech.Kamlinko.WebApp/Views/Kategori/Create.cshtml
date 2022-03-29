@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
     Layout = "_AdminLayout";
 }
-<hr />
+<div class="container-xxl flex-grow-1 container-p-y">
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" method="post">
@@ -30,6 +30,7 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

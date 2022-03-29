@@ -26,6 +26,12 @@ public class ProdukViewModel
     public decimal Harga { get; set; }
     public int Stok { get; set; }
     public string? Gambar { get; set; }
+    public string GambarSrc {
+        get {
+            return (string.IsNullOrEmpty(Gambar) ? "images/default.png" : Gambar );
+        }
+    }
+    public IFormFile? GambarFile { get; set; }
     public int[] KategoriId { get; set; }
     public List<KategoriViewModel> Kategories { get; set; }
 
