@@ -21,7 +21,14 @@
                 i++;
                 <tr>
                     <td>@i</td>
-                    <td><img src="@item.Gambar" height="100"/>Nama</td>
+                    <td>
+                        @foreach (var kategori in item.Kategories)
+                        {
+                            <img src="@kategori.Icon" height="32" />
+                            <p>@kategori.Nama</p>
+                        }
+                    </td>
+                    <td><img src="@item.Gambar" height="100" /></td>
                     <td>@item.Nama</td>
                     <td>@item.Deskripsi</td>
                     <td>

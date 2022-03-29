@@ -37,7 +37,12 @@ public class ProdukController : Controller
                 Deskripsi = dbResult[i].Deskripsi,
                 Gambar = dbResult[i].Gambar,
                 Harga = dbResult[i].Harga,
-                Stok = dbResult[i].Stok
+                Stok = dbResult[i].Stok,
+                Kategories = dbResult[i].ProdukKategoris.Select(x => new KategoriViewModel {
+                    Id = x.IdKategori,
+                    Nama = x.IdKategoriNavigation.Nama,
+                    Icon = x.IdKategoriNavigation.Icon
+                }).ToList()
             });
         }
 
@@ -72,11 +77,14 @@ public class ProdukController : Controller
             var product = request.ConvertToDbModel();
 
             //Insert to ProdukKategori table
-            product.ProdukKategoris.Add(new Datas.Entities.ProdukKategori 
-            {
-                IdKategori = request.KategoriId,
-                IdProduk = product.Id
-            });
+            for (int i = 0; i < request.KategoriId.Length; i++)
+            { 
+                product.ProdukKategoris.Add(new Datas.Entities.ProdukKategori 
+                {
+                    IdKategori = request.KategoriId[i],
+                    IdProduk = product.Id
+                });   
+            }
 
             await _produkService.Add(product);
 

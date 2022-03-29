@@ -34,7 +34,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="KategoriId" class="control-label"></label>
-                @Html.DropDownList("KategoriId", (List<SelectListItem>)ViewBag.KategoriDataSource)
+                @Html.DropDownList("KategoriId", 
+                (List<SelectListItem>)ViewBag.KategoriDataSource, 
+                    "", 
+                    new {
+                        multiple = "multiple"
+                    })
                 <span asp-validation-for="KategoriId" class="text-danger"></span>
             </div>
             <div class="form-group">

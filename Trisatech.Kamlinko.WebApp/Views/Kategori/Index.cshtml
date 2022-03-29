@@ -5,6 +5,37 @@
     int i = 0;
 }
 
+ <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+        <!-- Confirm Alert -->
+        <form asp-action="delete" method="post">
+            <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="pos_middle">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-body" style="padding: 20px 25px;">
+                                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+                                <h4 class="text-center font-grey-gallery" style="font-weight: 600;">Are you sure to delete this item?</h4>
+                                <br />
+                                <div class="row">
+                                    <input type="hidden" id="itemId" name="id" />
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-block green uppercase" data-backdrop="static" data-keyboard="false">Yes</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="#" class="btn btn-block red uppercase" data-backdrop="static" data-keyboard="false" data-dismiss="modal">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </form>
+        <!-- /.modal -->
+        <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+
 <a asp-action="Create" class="btn">Create</a>
 <table>
     <thead>
@@ -28,7 +59,7 @@
                     <td>
                         <a href="kategori/detail/@item.Id">Detail</a>
                         <a href="kategori/edit/@item.Id">Edit</a>
-                        <a href="kategori/delete/@item.Id">Delete</a>
+                        <button class="btn-delete" data-id="@item.Id">Delete</button>
                     </td>
                 </tr>
             }
@@ -39,3 +70,20 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function(){
+            //Show modal for delete confirmation
+            $(document).on("click", ".btn-delete", function () {
+            
+                var id = $(this).data('id');
+                console.log('id kategori: ' + id);
+                //ubah value yang id = itemId yang ada di dalam class .modal-body
+                $(".modal-body #itemId").val(id);
+                //tampilkan modal/dialog
+                $("#confirmDelete").modal('show');
+            });
+        });
+    </script>
+}

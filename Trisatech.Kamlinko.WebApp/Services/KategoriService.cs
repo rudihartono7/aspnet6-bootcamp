@@ -25,14 +25,14 @@ public class KategoriService : BaseDbService, IKategoriService
 
     public async Task<bool> Delete(int id)
     {
-        var kategori = await DbContext.Kategoris.FirstOrDefaultAsync(x=>x.Id == id);
+        var kategori = await DbContext.Kategoris.FirstOrDefaultAsync( x => x.Id == id);
 
         if(kategori == null) {
             throw new InvalidOperationException($"Kategori with ID {id} doesn't exist");
         }
 
         DbContext.ProdukKategoris.RemoveRange(DbContext.ProdukKategoris.Where(x=>x.IdKategori == id));
-        
+
         DbContext.Remove(kategori);
         await DbContext.SaveChangesAsync();
 

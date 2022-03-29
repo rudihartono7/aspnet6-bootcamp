@@ -6,7 +6,7 @@ public class ProdukViewModel
 {
     public ProdukViewModel()
     {
-        
+        Kategories = new List<KategoriViewModel>();   
     }
     public ProdukViewModel(int id, string nama, string deskripsi, decimal harga)
     {
@@ -15,6 +15,8 @@ public class ProdukViewModel
         Deskripsi = deskripsi;
         Harga = harga;
         Stok = 100;
+        KategoriId = Array.Empty<int>();
+        Kategories = new List<KategoriViewModel>();
     }
     public int Id { get; set; }
     [Required]
@@ -24,8 +26,8 @@ public class ProdukViewModel
     public decimal Harga { get; set; }
     public int Stok { get; set; }
     public string? Gambar { get; set; }
-    public int KategoriId { get; set; }
-    public string? NamaKategori { get; set; }
+    public int[] KategoriId { get; set; }
+    public List<KategoriViewModel> Kategories { get; set; }
 
     public Produk ConvertToDbModel(){
         return new Produk() {
