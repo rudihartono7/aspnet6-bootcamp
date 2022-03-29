@@ -30,6 +30,7 @@ public class KategoriController : Controller
                 Id = dbResult[i].Id,
                 Nama = dbResult[i].Nama,
                 Deskripsi = dbResult[i].Deskripsi,
+                Icon = dbResult[i].Icon
             });
         }
 
@@ -49,6 +50,47 @@ public class KategoriController : Controller
             await _kategoriService.Add(request.ConvertToDbModel());
 
             return Redirect(nameof(Index));   
+        }catch(InvalidOperationException ex){
+            ViewBag.ErrorMessage = ex.Message;
+        }
+        catch(Exception) {
+            throw;
+        }
+
+        return View(request);
+    }
+
+
+    public async Task<IActionResult> Edit(int? id){
+        if(id == null)
+        {
+            return BadRequest();
+        }
+
+        var result = await _kategoriService.Get(id.Value);
+
+        if(result == null) {
+            return NotFound();
+        }
+
+        return View(new KategoriViewModel(result));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(int? id, KategoriViewModel request)
+    {
+        if(id == null) {
+            return BadRequest();
+        }
+
+        if(!ModelState.IsValid){
+            return View(request);
+        }
+
+        try{
+            await _kategoriService.Update(request.ConvertToDbModel());
+
+            return RedirectToAction(nameof(Index));  
         }catch(InvalidOperationException ex){
             ViewBag.ErrorMessage = ex.Message;
         }

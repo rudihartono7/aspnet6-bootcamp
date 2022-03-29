@@ -8,6 +8,7 @@
 <table>
     <thead>
         <th>No</th>
+        <th>Icon</th>
         <th>Nama</th>
         <th>Deskripsi</th>
         <th>Action</th>
@@ -20,10 +21,12 @@
                 i++;
                 <tr>
                     <td>@i</td>
+                    <td><img src="@item.Icon" height="50" /></td>
                     <td>@item.Nama</td>
                     <td>@item.Deskripsi</td>
                     <td>
                         <a href="kategori/detail/@item.Id">Detail</a>
+                        <a href="kategori/edit/@item.Id">Edit</a>
                         <a href="kategori/delete/@item.Id">Delete</a>
                     </td>
                 </tr>
