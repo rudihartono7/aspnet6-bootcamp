@@ -67,7 +67,7 @@ public class ProdukService : BaseDbService, IProdukService
 
     public async Task<Produk?> Get(int id)
     {
-        var result = await DbContext.Produks.FirstOrDefaultAsync();
+        var result = await DbContext.Produks.FirstOrDefaultAsync(x=>x.Id == id);
 
         if(result == null)
         {
