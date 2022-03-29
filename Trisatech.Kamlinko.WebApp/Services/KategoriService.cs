@@ -31,6 +31,8 @@ public class KategoriService : BaseDbService, IKategoriService
             throw new InvalidOperationException($"Kategori with ID {id} doesn't exist");
         }
 
+        DbContext.ProdukKategoris.RemoveRange(DbContext.ProdukKategoris.Where(x=>x.IdKategori == id));
+        
         DbContext.Remove(kategori);
         await DbContext.SaveChangesAsync();
 

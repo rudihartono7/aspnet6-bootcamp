@@ -42,6 +42,7 @@ public class KategoriController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(KategoriViewModel request) {
         if(!ModelState.IsValid){
             return View(request);
@@ -76,7 +77,22 @@ public class KategoriController : Controller
         return View(new KategoriViewModel(result));
     }
 
+    public async Task<IActionResult> Detail(int? id){
+        if(id == null)
+        {
+            return BadRequest();
+        }
+
+        var result = await _kategoriService.Get(id.Value);
+
+        if(result == null) {
+            return NotFound();
+        }
+
+        return View(new KategoriViewModel(result));
+    }
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int? id, KategoriViewModel request)
     {
         if(id == null) {
@@ -89,6 +105,43 @@ public class KategoriController : Controller
 
         try{
             await _kategoriService.Update(request.ConvertToDbModel());
+
+            return RedirectToAction(nameof(Index));  
+        }catch(InvalidOperationException ex){
+            ViewBag.ErrorMessage = ex.Message;
+        }
+        catch(Exception) {
+            throw;
+        }
+
+        return View(request);
+    }
+    
+    public async Task<IActionResult> Delete(int? id){
+        if(id == null)
+        {
+            return BadRequest();
+        }
+
+        var result = await _kategoriService.Get(id.Value);
+
+        if(result == null) {
+            return NotFound();
+        }
+
+        return View(new KategoriViewModel(result));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int? id, KategoriViewModel request)
+    {
+        if(id == null) {
+            return BadRequest();
+        }
+        
+        try{
+            await _kategoriService.Delete(id.Value);
 
             return RedirectToAction(nameof(Index));  
         }catch(InvalidOperationException ex){
