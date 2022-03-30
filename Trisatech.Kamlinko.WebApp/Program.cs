@@ -21,6 +21,7 @@ builder.Services.AddDbContext<KamlinkoDbContext>(
 
 builder.Services.AddScoped<IKategoriService, KategoriService>();
 builder.Services.AddScoped<IProdukService, ProdukService>();
+builder.Services.AddScoped<IProdukKategoriService, ProdukKategoriService>();
 
 #endregion
 builder.Services.AddControllersWithViews();

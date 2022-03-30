@@ -10,5 +10,6 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Entities
         public string Username { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string? NomorHp { get; set; }
+        public string? Email { get; set; }
     }
 }

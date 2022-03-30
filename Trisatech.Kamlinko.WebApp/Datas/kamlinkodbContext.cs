@@ -59,6 +59,11 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                 entity.Property(e => e.Username)
                     .HasMaxLength(50)
                     .HasColumnName("username");
+                
+                entity.Property(e => e.Email)
+                    .HasMaxLength(50)
+                    .HasColumnName("email");
+                
             });
 
             modelBuilder.Entity<Alamat>(entity =>
