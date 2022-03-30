@@ -13,38 +13,42 @@ public class ProdukService : BaseDbService, IProdukService
 
     public async Task<Produk> Add(Produk obj, int idKategori)
     {
-        if(await DbContext.Produks.AnyAsync(x=>x.Id == obj.Id)){
+        if (await DbContext.Produks.AnyAsync(x => x.Id == obj.Id))
+        {
             throw new InvalidOperationException($"Produk with ID {obj.Id} is already exist");
         }
 
         await DbContext.AddAsync(obj);
         await DbContext.SaveChangesAsync();
 
-        DbContext.ProdukKategoris.Add(new ProdukKategori{
+        DbContext.ProdukKategoris.Add(new ProdukKategori
+        {
             IdKategori = idKategori,
             IdProduk = obj.Id,
         });
-        
+
         return obj;
     }
 
     public async Task<Produk> Add(Produk obj)
     {
-        if(await DbContext.Produks.AnyAsync(x=>x.Id == obj.Id)){
+        if (await DbContext.Produks.AnyAsync(x => x.Id == obj.Id))
+        {
             throw new InvalidOperationException($"Produk with ID {obj.Id} is already exist");
         }
 
         await DbContext.AddAsync(obj);
         await DbContext.SaveChangesAsync();
-        
+
         return obj;
     }
 
     public async Task<bool> Delete(int id)
     {
-        var Produk = await DbContext.Produks.FirstOrDefaultAsync(x=>x.Id == id);
+        var Produk = await DbContext.Produks.FirstOrDefaultAsync(x => x.Id == id);
 
-        if(Produk == null) {
+        if (Produk == null)
+        {
             throw new InvalidOperationException($"Produk with ID {id} doesn't exist");
         }
 
@@ -56,7 +60,8 @@ public class ProdukService : BaseDbService, IProdukService
 
     public async Task<List<Produk>> Get(int limit, int offset, string keyword)
     {
-        if(string.IsNullOrEmpty(keyword)){
+        if (string.IsNullOrEmpty(keyword))
+        {
             keyword = "";
         }
 
@@ -68,9 +73,9 @@ public class ProdukService : BaseDbService, IProdukService
     public async Task<Produk?> Get(int id)
     {
         var result = await DbContext.Produks
-        .FirstOrDefaultAsync(x=>x.Id == id);
+        .FirstOrDefaultAsync(x => x.Id == id);
 
-        if(result == null)
+        if (result == null)
         {
             throw new InvalidOperationException($"Produk with ID {id} doesn't exist");
         }
@@ -86,27 +91,37 @@ public class ProdukService : BaseDbService, IProdukService
     public async Task<List<Produk>> GetAll()
     {
         return await DbContext.Produks
-        .Include(x=>x.ProdukKategoris)
-        .ThenInclude(x=>x.IdKategoriNavigation)
+        .Include(x => x.ProdukKategoris)
+        .ThenInclude(x => x.IdKategoriNavigation)
         .ToListAsync();
     }
 
     public async Task<Produk> Update(Produk obj)
     {
-        if(obj == null)
+        if (obj == null)
         {
             throw new ArgumentNullException("Produk cannot be null");
         }
 
-        var Produk = await DbContext.Produks.FirstOrDefaultAsync(x=>x.Id == obj.Id);
+        var Produk = await DbContext.Produks.FirstOrDefaultAsync(x => x.Id == obj.Id);
 
-        if(Produk == null) {
+        if (Produk == null)
+        {
             throw new InvalidOperationException($"Produk with ID {obj.Id} doesn't exist in database");
         }
 
         Produk.Nama = obj.Nama;
         Produk.Deskripsi = obj.Deskripsi;
-        
+        if (!string.IsNullOrEmpty(obj.Gambar))
+        {
+            Produk.Gambar = obj.Gambar;
+        }
+        Produk.Harga = obj.Harga;
+
+        if (obj.ProdukKategoris != null && obj.ProdukKategoris.Any())
+        {
+            Produk.ProdukKategoris = obj.ProdukKategoris;
+        }
         DbContext.Update(Produk);
         await DbContext.SaveChangesAsync();
 

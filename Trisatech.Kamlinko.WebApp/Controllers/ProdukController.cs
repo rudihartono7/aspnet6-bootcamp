@@ -17,8 +17,8 @@ public class ProdukController : Controller
     private readonly IWebHostEnvironment _iWebHost;
     private readonly ILogger<ProdukController> _logger;
 
-    public ProdukController(ILogger<ProdukController> logger, 
-    IProdukService productService, 
+    public ProdukController(ILogger<ProdukController> logger,
+    IProdukService productService,
     IKategoriService kategoriService,
     IProdukKategoriService produkKategoriService,
     IWebHostEnvironment iwebHost)
@@ -38,14 +38,16 @@ public class ProdukController : Controller
 
         for (int i = 0; i < dbResult.Count; i++)
         {
-            viewModels.Add(new ProdukViewModel{
+            viewModels.Add(new ProdukViewModel
+            {
                 Id = dbResult[i].Id,
                 Nama = dbResult[i].Nama,
                 Deskripsi = dbResult[i].Deskripsi,
                 Gambar = dbResult[i].Gambar,
                 Harga = dbResult[i].Harga,
                 Stok = dbResult[i].Stok,
-                Kategories = dbResult[i].ProdukKategoris.Select(x => new KategoriViewModel {
+                Kategories = dbResult[i].ProdukKategoris.Select(x => new KategoriViewModel
+                {
                     Id = x.IdKategori,
                     Nama = x.IdKategoriNavigation.Nama,
                     Icon = x.IdKategoriNavigation.Icon
@@ -71,7 +73,7 @@ public class ProdukController : Controller
 
     private async Task SetKategoriDataSource(int[] kategoris)
     {
-        if(kategoris == null)
+        if (kategoris == null)
         {
             await SetKategoriDataSource();
             return;
@@ -88,7 +90,8 @@ public class ProdukController : Controller
         }).ToList();
     }
 
-    public async Task<IActionResult> Create() {
+    public async Task<IActionResult> Create()
+    {
 
         await SetKategoriDataSource();
         return View(new ProdukViewModel());
@@ -96,25 +99,27 @@ public class ProdukController : Controller
 
 
     [HttpGet]
-    public async Task<IActionResult> Edit(int? id) {
+    public async Task<IActionResult> Edit(int? id)
+    {
 
-        if(id == null)
+        if (id == null)
         {
             return BadRequest();
         }
 
         var produk = await _produkService.Get(id.Value);
 
-        if(produk == null) 
+        if (produk == null)
         {
             return NotFound();
         }
 
         var kategoriIds = await _produkKategoriService.GetKategoriIds(produk.Id);
-        
+
         await SetKategoriDataSource(kategoriIds);
 
-        return View(new ProdukViewModel(){
+        return View(new ProdukViewModel()
+        {
             Id = produk.Id,
             Nama = produk.Nama,
             Deskripsi = produk.Deskripsi,
@@ -122,31 +127,36 @@ public class ProdukController : Controller
             Gambar = produk.Gambar,
             KategoriId = kategoriIds
         });
-    } 
-
+    }
+    
     [HttpPost]
-    public async Task<IActionResult> Edit(int? id, ProdukViewModel request) {
-        if(!ModelState.IsValid){
+    public async Task<IActionResult> Edit(int? id, ProdukViewModel request)
+    {
+        if (!ModelState.IsValid)
+        {
+
+            await SetKategoriDataSource(request.KategoriId);
+            return View(request);
+        }
+
+        if (request == null)
+        {
             await SetKategoriDataSource();
             return View(request);
         }
 
-        if(request == null) {
-            await SetKategoriDataSource();
-            return View(request);
-        }
-
-        try{
-        
+        try
+        {
             string fileName = string.Empty;
-            
-            if(request.GambarFile != null) 
+
+            if (request.GambarFile != null)
             {
                 fileName = $"{Guid.NewGuid()}-{request.GambarFile?.FileName}";
 
-                string filePathName = _iWebHost.WebRootPath + fileName;
-                
-                using(var streamWriter = System.IO.File.Create(filePathName)){
+                string filePathName = _iWebHost.WebRootPath + "\\images\\" + fileName;
+
+                using (var streamWriter = System.IO.File.Create(filePathName))
+                {
                     //await streamWriter.WriteAsync(Common.StreamToBytes(request.GambarFile.OpenReadStream()));
                     //using extension to convert stream to bytes
                     await streamWriter.WriteAsync(request.GambarFile.OpenReadStream().ToBytes());
@@ -154,56 +164,94 @@ public class ProdukController : Controller
             }
 
             var product = request.ConvertToDbModel();
-            product.Gambar = $"images/{fileName}";
+            if (request.GambarFile != null)
+            {
+                product.Gambar = $"images/{fileName}";
+            }
+            
+            //Update ProdukKategori
+            var productKategories = await _produkKategoriService.GetKategoriIds(request.Id);
 
-            //Insert to ProdukKategori table
             for (int i = 0; i < request.KategoriId.Length; i++)
-            { 
-                product.ProdukKategoris.Add(new Datas.Entities.ProdukKategori 
+            {
+                if (productKategories != null && productKategories.Any())
                 {
-                    IdKategori = request.KategoriId[i],
-                    IdProduk = product.Id
-                });   
+                    if (!productKategories.Any(x => x == request.KategoriId[i]))
+                    {
+                        product.ProdukKategoris.Add(new Datas.Entities.ProdukKategori
+                        {
+                            IdKategori = request.KategoriId[i],
+                            IdProduk = product.Id
+                        });
+                    }
+                }
+                else
+                {
+                    product.ProdukKategoris.Add(new Datas.Entities.ProdukKategori
+                    {
+                        IdKategori = request.KategoriId[i],
+                        IdProduk = product.Id
+                    });
+                }
             }
 
-            await _produkService.Add(product);
+            //Remove kategori from product
+            if (productKategories != null && (product.ProdukKategoris != null && product.ProdukKategoris.Any()))
+            {
+                foreach (var item in productKategories)
+                {
+                    if (!product.ProdukKategoris.Any(x => x.IdKategori == item))
+                    {
+                        await _produkKategoriService.Remove(request.Id, item);
+                    }
+                }
+            }
 
-            return Redirect(nameof(Index));
-        }catch(InvalidOperationException ex){
+            await _produkService.Update(product);
+
+            return RedirectToAction(nameof(Index));
+        }
+        catch (InvalidOperationException ex)
+        {
             ViewBag.ErrorMessage = ex.Message;
         }
-        catch(Exception) {
+        catch (Exception)
+        {
             throw;
         }
 
-
-        await SetKategoriDataSource();
+        await SetKategoriDataSource(request.KategoriId);
         return View(request);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(ProdukViewModel request) {
-        if(!ModelState.IsValid){
+    public async Task<IActionResult> Create(ProdukViewModel request)
+    {
+        if (!ModelState.IsValid)
+        {
             await SetKategoriDataSource();
             return View(request);
         }
 
-        if(request == null) {
+        if (request == null)
+        {
             await SetKategoriDataSource();
             return View(request);
         }
 
-        try{
-        
+        try
+        {
+
             string fileName = string.Empty;
-            
-            if(request.GambarFile != null) 
+
+            if (request.GambarFile != null)
             {
                 fileName = $"{Guid.NewGuid()}-{request.GambarFile?.FileName}";
 
                 string filePathName = _iWebHost.WebRootPath + "/" + fileName;
-                
-                using(var streamWriter = System.IO.File.Create(filePathName)){
+
+                using (var streamWriter = System.IO.File.Create(filePathName))
+                {
                     //await streamWriter.WriteAsync(Common.StreamToBytes(request.GambarFile.OpenReadStream()));
                     //using extension to convert stream to bytes
                     await streamWriter.WriteAsync(request.GambarFile.OpenReadStream().ToBytes());
@@ -215,21 +263,24 @@ public class ProdukController : Controller
 
             //Insert to ProdukKategori table
             for (int i = 0; i < request.KategoriId.Length; i++)
-            { 
-                product.ProdukKategoris.Add(new Datas.Entities.ProdukKategori 
+            {
+                product.ProdukKategoris.Add(new Datas.Entities.ProdukKategori
                 {
                     IdKategori = request.KategoriId[i],
                     IdProduk = product.Id
-                });   
+                });
             }
 
             await _produkService.Add(product);
 
             return Redirect(nameof(Index));
-        }catch(InvalidOperationException ex){
+        }
+        catch (InvalidOperationException ex)
+        {
             ViewBag.ErrorMessage = ex.Message;
         }
-        catch(Exception) {
+        catch (Exception)
+        {
             throw;
         }
 

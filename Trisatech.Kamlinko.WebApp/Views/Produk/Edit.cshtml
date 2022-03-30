@@ -5,6 +5,7 @@
     ViewData["Title"] = "Edit";
     Layout = "_AdminLayout";
 }
+
 <div class="container-xxl flex-grow-1 container-p-y">
 <div class="row">
     <div class="col-xl">
@@ -14,7 +15,7 @@
                 <small class="text-muted float-end">Default label</small>
             </div>
             <div class="card-body">
-                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input asp-for="Id" type="hidden" />
                     <div class="form-group mb-3">
