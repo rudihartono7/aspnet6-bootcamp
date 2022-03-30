@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Trisatech.Kamlinko.WebApp.Datas;
@@ -22,9 +23,23 @@ builder.Services.AddDbContext<KamlinkoDbContext>(
 builder.Services.AddScoped<IKategoriService, KategoriService>();
 builder.Services.AddScoped<IProdukService, ProdukService>();
 builder.Services.AddScoped<IProdukKategoriService, ProdukKategoriService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
-#endregion
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(
+        options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromDays(365);
+                options.SlidingExpiration = true;
+                options.AccessDeniedPath = "/Home/Denied";
+                options.LoginPath = "/Account/Login";
+            }
+    );
+    
+#endregion
+
+
 
 var app = builder.Build();
 
@@ -41,6 +56,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

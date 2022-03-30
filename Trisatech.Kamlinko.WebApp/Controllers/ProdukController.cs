@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Trisatech.Kamlinko.WebApp.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Trisatech.Kamlinko.WebApp.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Trisatech.Kamlinko.WebApp.Controllers;
 
+[Authorize]
 public class ProdukController : Controller
 {
     private readonly IProdukService _produkService;
@@ -42,10 +44,8 @@ public class ProdukController : Controller
             {
                 Id = dbResult[i].Id,
                 Nama = dbResult[i].Nama,
-                Deskripsi = dbResult[i].Deskripsi,
                 Gambar = dbResult[i].Gambar,
                 Harga = dbResult[i].Harga,
-                Stok = dbResult[i].Stok,
                 Kategories = dbResult[i].ProdukKategoris.Select(x => new KategoriViewModel
                 {
                     Id = x.IdKategori,
@@ -94,7 +94,7 @@ public class ProdukController : Controller
     {
 
         await SetKategoriDataSource();
-        return View(new ProdukViewModel());
+        return View(new ProdukReqViewModel());
     }
 
 
@@ -118,7 +118,7 @@ public class ProdukController : Controller
 
         await SetKategoriDataSource(kategoriIds);
 
-        return View(new ProdukViewModel()
+        return View(new ProdukReqViewModel()
         {
             Id = produk.Id,
             Nama = produk.Nama,
@@ -128,9 +128,9 @@ public class ProdukController : Controller
             KategoriId = kategoriIds
         });
     }
-    
+
     [HttpPost]
-    public async Task<IActionResult> Edit(int? id, ProdukViewModel request)
+    public async Task<IActionResult> Edit(int? id, ProdukReqViewModel request)
     {
         if (!ModelState.IsValid)
         {
@@ -225,7 +225,7 @@ public class ProdukController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(ProdukViewModel request)
+    public async Task<IActionResult> Create(ProdukReqViewModel request)
     {
         if (!ModelState.IsValid)
         {
