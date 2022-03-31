@@ -1,5 +1,5 @@
-﻿@using System.Globalization
-@model List<Trisatech.Kamlinko.WebApp.ViewModels.ProdukViewModel>
+@using System.Globalization
+@model Trisatech.Kamlinko.WebApp.ViewModels.ProdukDetailViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -8,21 +8,17 @@
     <div class="container">
         <div class="heading_container heading_center">
             <h2>
-                Our Best Collection
+                @Model.Nama
             </h2>
             <p>
-                Mari-mari berbelanja di Kamlinko store, semua bahan organic yang fresh dan berkualitas bisa didapat dengan harga terjangkau dan 
-                dapatkan berbagai keuntungan lain dari petani langsung
+                @Model.Deskripsi
             </p>
         </div>
         <div class="row">
-            @if(Model != null) {
-                foreach (var item in Model)
-                {
-                <div class="col-sm-6 col-lg-4">
+            <div class="col-sm-6 col-lg-4">
                 <div class="box">
                     <div class="img-box">
-                        <img src="~/@item.GambarSrc" alt="">
+                        <img src="~/@Model.GambarSrc" alt="">
                     </div>
                     <div class="detail-box">
                         <span class="rating">
@@ -32,20 +28,27 @@
                             <i class="fa fa-star" aria-hidden="true"></i>
                             <i class="fa fa-star-half-o" aria-hidden="true"></i>
                         </span>
-                        @Html.ActionLink(@item.Nama, "Produk", "Home", new {
-                            id = @item.Id
-                        });
+                        <span>Terjual : @Model.Terjual</span>
+                        <span>Stok : @Model.Stok</span>
                         <div class="price_box">
                             <h6 class="price_heading">
-                                @item.Harga.ToString("C", new CultureInfo("id-ID"))
+                                @Model.Harga.ToString("C", new CultureInfo("id-ID"))
                             </h6>
                         </div>
                     </div>
                 </div>
-            </div>        
-                }
-            }
-
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="box">
+                    <p>@Model.Deskripsi</p>
+                    <form asp-action="Add" asp-controller="Keranjang" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="produkId" value="@Model.Id" />
+                        <button class="btn btn-primary" type="submit" value="Tambahkan ke Keranjang">Tambahkan ke
+                            keranjang</button>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="btn-box">
             <a href="">

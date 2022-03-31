@@ -1,0 +1,45 @@
+@using System.Globalization
+@model List<Trisatech.Kamlinko.WebApp.ViewModels.KeranjangViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+    int i = 0;
+}
+
+<section class="product_section layout_padding2-top layout_padding-bottom">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>
+                Keranjang
+            </h2>
+            <p>
+                Ini keranjang mu, silahkan dicheckout takut kehabisan orang lain, yang lagi ramai berbelanja
+            </p>
+        </div>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr class="text-nowrap">
+                        <th>#</th>
+                        <th>Nama Produk</th>
+                        <th>Gambar</th>
+                        <th>Jumlah</th>
+                        <th>SubTotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        i++;
+                        <tr>
+                            <td>@i</td>
+                            <td>@item.NamaProduk</td>
+                            <td> <img src="~/@item.Image" height="100" /></td>
+                            <td>@item.JmlBarang</td>
+                            <td>@item.Subtotal.ToString("C", new CultureInfo("id-ID"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

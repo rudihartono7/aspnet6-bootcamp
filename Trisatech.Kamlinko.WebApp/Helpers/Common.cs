@@ -13,6 +13,14 @@ public static class  Common
         return "";
     }
 
+    public static int ToInt(this string content){
+        if(int.TryParse(content, out int result)){
+            return result;
+        }
+
+        throw new InvalidOperationException("Belum login euy");
+    }
+
     public static byte[] ToBytes(this Stream streamContent) {
         MemoryStream ms = new MemoryStream();
         

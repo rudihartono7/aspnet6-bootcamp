@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Trisatech.Kamlinko.WebApp.Controllers;
 
-[Authorize]
+[Authorize(Roles = AppConstant.ADMIN)]
 public class ProdukController : Controller
 {
     private readonly IProdukService _produkService;
@@ -32,6 +32,7 @@ public class ProdukController : Controller
         _produkKategoriService = produkKategoriService;
     }
 
+    [Route("produk/index")]
     public async Task<IActionResult> Index()
     {
         var dbResult = await _produkService.GetAll();
@@ -134,7 +135,6 @@ public class ProdukController : Controller
     {
         if (!ModelState.IsValid)
         {
-
             await SetKategoriDataSource(request.KategoriId);
             return View(request);
         }

@@ -10,12 +10,12 @@ using Trisatech.Kamlinko.WebApp.Interfaces;
 
 namespace Trisatech.Kamlinko.WebApp.Controllers;
 
-public class AccountController : Controller
+public class AccountCustomerController : Controller
 {
-    private readonly ILogger<AccountController> _logger;
+    private readonly ILogger<AccountCustomerController> _logger;
     private readonly IAccountService _accountService;
 
-    public AccountController(ILogger<AccountController> logger, IAccountService accountService)
+    public AccountCustomerController(ILogger<AccountCustomerController> logger, IAccountService accountService)
     {
         _logger = logger;
         _accountService = accountService;
@@ -39,10 +39,11 @@ public class AccountController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(AccountLoginViewModel request)
     {
         //Cocokan username dan password ke database
-        var result = await _accountService.Login(request.Username, request.Password);
+        var result = await _accountService.LoginCustomer(request.Username, request.Password);
 
         if (result == null)
         {
@@ -54,9 +55,10 @@ public class AccountController : Controller
             #region set session login
             var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, result.Email ?? result.Nama),
+            new Claim(ClaimTypes.NameIdentifier, result.Id.ToString()),
+            new Claim(ClaimTypes.Email, result.Email ?? result.Nama),
             new Claim("FullName", result.Nama),
-            new Claim(ClaimTypes.Role, AppConstant.ADMIN),
+            new Claim(ClaimTypes.Role, AppConstant.CUSTOMER),
         };
 
             var claimsIdentity = new ClaimsIdentity(
@@ -92,12 +94,46 @@ public class AccountController : Controller
                 authProperties);
             #endregion
 
-            return RedirectPermanentPreserveMethod("https://localhost:7256/produk/index");
+            return RedirectToActionPermanent("Index", "Home");
         }
         catch (System.Exception)
         {
             return View(request);
         }
 
+    }
+
+    public IActionResult Register() {
+
+        return View(new RegisterViewModel());
+    }
+
+    public IActionResult Registered() {
+
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel request) {
+        
+        if(!ModelState.IsValid) {
+            return View(request);
+        }
+
+        try
+        {
+            await _accountService.Register(request);
+
+            return RedirectToAction("Registered", "AccountCustomer");
+        }catch(InvalidOperationException ex){
+            ViewBag.ErrorMessage = ex.Message;
+        }
+        catch (System.Exception)
+        {
+            throw;
+        }
+
+        return View(request);
     }
 }

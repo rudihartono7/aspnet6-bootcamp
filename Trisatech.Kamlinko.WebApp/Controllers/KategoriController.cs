@@ -4,9 +4,11 @@ using Trisatech.Kamlinko.WebApp.Models;
 using Trisatech.Kamlinko.WebApp.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Trisatech.Kamlinko.WebApp.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Trisatech.Kamlinko.WebApp.Controllers;
 
+[Authorize(Roles = AppConstant.ADMIN)]
 public class KategoriController : Controller
 {
     private readonly IKategoriService _kategoriService;
