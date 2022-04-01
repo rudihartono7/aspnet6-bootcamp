@@ -2,6 +2,7 @@
 @model List<Trisatech.Kamlinko.WebApp.ViewModels.ProdukViewModel>
 @{
     ViewData["Title"] = "Home Page";
+    int halamanSekarang = ViewBag.HalamanSekarang ?? 1;
 }
 
 <section class="product_section layout_padding2-top layout_padding-bottom">
@@ -45,6 +46,18 @@
             </div>        
                 }
             }
+        
+        @Html.ActionLink("Sebelumnya", "Index", "Home", new {
+            page = halamanSekarang == 1 ? 1 : halamanSekarang - 1,
+            pageCount = 2
+        })
+
+        <p>Page : @halamanSekarang</p>
+
+        @Html.ActionLink("Selanjutnya", "Index", "Home", new {
+            page = Model.Count < 2 ? halamanSekarang : halamanSekarang + 1,
+            pageCount = 2
+        })
 
         </div>
         <div class="btn-box">

@@ -31,12 +31,36 @@ public class HomeController : Controller
         base.OnActionExecuted(context);
     }
     
+    //page = number untuk halaman ke - n
+    //page count = jumlah data yang ditampilkan per halaman
     public async Task<IActionResult> Index(int? page, int? pageCount)
     {
         var viewModels = new List<ProdukViewModel>();
 
-        var dbResult = await _produkService.Get(pageCount??10, (page??1 - 1) * (pageCount??10), string.Empty);
+        int limit = 2;
+        if(pageCount != null)
+        {
+            limit = pageCount.Value;
+        }
+
+        int offset = 0;
+        if(page == null) 
+        {
+            offset = 0;
+        }else{
+            offset = (page.Value - 1) * limit;
+        }
+
+        var dbResult = await _produkService.Get(limit, offset, string.Empty);
         
+        if(dbResult == null || !dbResult.Any())
+        {
+            return RedirectToAction(nameof(Index), new {
+                page = page > 1 ? page - 1 : 1,
+                pageCount = pageCount
+            });
+        }
+
         for (int i = 0; i < dbResult.Count; i++)
         {
             viewModels.Add(new ProdukViewModel
@@ -54,6 +78,8 @@ public class HomeController : Controller
             });
         }
 
+
+        ViewBag.HalamanSekarang = page ?? 1;
         return View(viewModels);
     }
 

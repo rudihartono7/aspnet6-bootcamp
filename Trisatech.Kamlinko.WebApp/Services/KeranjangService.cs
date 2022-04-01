@@ -45,9 +45,19 @@ public class KeranjangService : BaseDbService, IKeranjangService
         return obj;
     }
 
-    public Task<bool> Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        throw new NotImplementedException();
+        var keranjang = await DbContext.Keranjangs.FirstOrDefaultAsync(x=>x.Id == id);
+
+        if(keranjang == null)
+        {
+            throw new InvalidOperationException("cannot find cart item in database");
+        }
+
+        DbContext.Remove(keranjang);
+        await DbContext.SaveChangesAsync();
+
+        return true;
     }
 
     public Task<List<Keranjang>> Get(int limit, int offset, string keyword)
@@ -70,9 +80,35 @@ public class KeranjangService : BaseDbService, IKeranjangService
         throw new NotImplementedException();
     }
 
-    public Task<Keranjang> Update(Keranjang obj)
+    public async Task<Keranjang> Update(Keranjang obj)
     {
-        throw new NotImplementedException();
+        var keranjang = await DbContext.Keranjangs.FirstOrDefaultAsync(x=>x.Id == obj.Id);
+
+        if(keranjang == null)
+        {
+            throw new InvalidOperationException("cannot find cart item in database");
+        }
+
+        //get data produk
+        var produk = await _produkService.Get(obj.IdProduk);
+
+        if(produk == null)
+        {
+            throw new InvalidOperationException("Produk tidak ditemukan");
+        }
+
+        if(obj.JmlBarang < 1) 
+        {
+            obj.JmlBarang = 1;
+        }
+
+        //rumus subtotal = harga * jumlah produk
+        keranjang.Subtotal = produk.Harga * obj.JmlBarang;
+
+        DbContext.Update(keranjang);
+        await DbContext.SaveChangesAsync();
+
+        return keranjang;
     }
 
     async Task<List<KeranjangViewModel>> IKeranjangService.Get(int idCustomer)
