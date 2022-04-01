@@ -15,5 +15,6 @@ public class KeranjangViewModel
     public int IdCustomer { get; set; }
     public int JmlBarang { get; set; }
     public decimal Subtotal { get; set; }
+    public decimal HargaBarang { get; set; }
 
 }

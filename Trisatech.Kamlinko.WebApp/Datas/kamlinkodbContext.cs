@@ -28,6 +28,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas
         public virtual DbSet<Produk> Produks { get; set; } = null!;
         public virtual DbSet<ProdukKategori> ProdukKategoris { get; set; } = null!;
         public virtual DbSet<StatusOrder> StatusOrders { get; set; } = null!;
+        public virtual DbSet<DetailOrder> DetailOrders { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -198,11 +199,36 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                     .HasConstraintName("keranjang_FK");
             });
 
+            modelBuilder.Entity<DetailOrder>(entity => {
+                
+                entity.ToTable("detail_order");
+
+                entity.HasIndex(e => e.IdOrder, "detail_order_FK_1");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdOrder).HasColumnName("id_order");
+
+                entity.Property(e => e.IdProduk).HasColumnName("id_produk");
+                
+                entity.Property(e => e.Harga).HasColumnName("harga")
+                .HasPrecision(10);
+
+                entity.Property(e => e.JmlBarang).HasColumnName("jml_barang");
+                
+                entity.Property(e => e.SubTotal).HasColumnName("subtotal")
+                .HasPrecision(10);
+                
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.DetailOrders)
+                    .HasForeignKey(d => d.IdOrder)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("detail_order_FK_1");
+            });
+
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("order");
-
-                entity.HasIndex(e => e.IdKeranjang, "order_FK");
 
                 entity.HasIndex(e => e.IdCustomer, "order_FK_1");
 
@@ -215,8 +241,6 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                 entity.Property(e => e.IdAlamat).HasColumnName("id_alamat");
 
                 entity.Property(e => e.IdCustomer).HasColumnName("id_customer");
-
-                entity.Property(e => e.IdKeranjang).HasColumnName("id_keranjang");
 
                 entity.Property(e => e.JmlBayar)
                     .HasPrecision(10)
@@ -243,12 +267,6 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                     .HasForeignKey(d => d.IdCustomer)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("order_FK_1");
-
-                entity.HasOne(d => d.IdKeranjangNavigation)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.IdKeranjang)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("order_FK");
 
                 entity.HasOne(d => d.StatusNavigation)
                     .WithMany(p => p.Orders)

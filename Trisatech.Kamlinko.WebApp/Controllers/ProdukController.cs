@@ -248,7 +248,7 @@ public class ProdukController : Controller
             {
                 fileName = $"{Guid.NewGuid()}-{request.GambarFile?.FileName}";
 
-                string filePathName = _iWebHost.WebRootPath + "/" + fileName;
+                string filePathName = _iWebHost.WebRootPath + "/images/" + fileName;
 
                 using (var streamWriter = System.IO.File.Create(filePathName))
                 {

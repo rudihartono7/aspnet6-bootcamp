@@ -4,5 +4,7 @@ using Trisatech.Kamlinko.WebApp.ViewModels;
 
 public interface IKeranjangService : ICrudService<Keranjang>
 {
-    Task<List<KeranjangViewModel>> Get(int idCustomer);   
+    Task<List<KeranjangViewModel>> Get(int idCustomer);
+    
+    Task Clear(int idCustomer);   
 }

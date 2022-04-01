@@ -34,12 +34,29 @@
                             <td>@i</td>
                             <td>@item.NamaProduk</td>
                             <td> <img src="~/@item.Image" height="100" /></td>
-                            <td>@item.JmlBarang</td>
+                            <td>
+                                <form class="update-keranjang" asp-action="Edit" asp-controller="Keranjang" method="post">
+                                    <input type="hidden" name="Id" value="@item.Id" />
+                                    <input type="number" name="JmlBarang" value="@item.JmlBarang" />
+                                </form>
+                                @item.JmlBarang
+                                </td>
                             <td>@item.Subtotal.ToString("C", new CultureInfo("id-ID"))</td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <form asp-controller="Order" asp-action="Checkout">
+                <button type="submit">Submit</button>
+            </form>
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+        });
+    </script>
+}

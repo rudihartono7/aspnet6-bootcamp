@@ -45,6 +45,12 @@ public class KeranjangService : BaseDbService, IKeranjangService
         return obj;
     }
 
+    public async Task Clear(int idCustomer)
+    {
+        DbContext.RemoveRange(DbContext.Keranjangs.Where(x=>x.IdCustomer == idCustomer));
+        await DbContext.SaveChangesAsync();
+    }
+
     public async Task<bool> Delete(int id)
     {
         var keranjang = await DbContext.Keranjangs.FirstOrDefaultAsync(x=>x.Id == id);
@@ -121,6 +127,7 @@ public class KeranjangService : BaseDbService, IKeranjangService
             Id = a.Id,
             IdCustomer = a.IdCustomer,
             IdProduk = a.IdProduk,
+            HargaBarang = b.Harga,
             Image = b.Gambar,
             JmlBarang  = a.JmlBarang,
             Subtotal  = a.Subtotal,
