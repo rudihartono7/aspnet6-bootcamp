@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Trisatech.Kamlinko.WebApp.Interfaces;
 using System.Security.Claims;
 using Trisatech.Kamlinko.WebApp.Helpers;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Trisatech.Kamlinko.WebApp.Controllers;
 
@@ -17,10 +18,15 @@ public class KeranjangController : Controller
     private readonly ILogger<KeranjangController> _logger;
     private readonly IKeranjangService _keranjangService;
 
-    public KeranjangController(ILogger<KeranjangController> logger, IKeranjangService keranjangService)
+    private readonly IAccountService _accountService;
+
+    public KeranjangController(ILogger<KeranjangController> logger, 
+    IKeranjangService keranjangService,
+    IAccountService accountService)
     {
         _logger = logger;
         _keranjangService = keranjangService;
+        _accountService = accountService;
     }
 
     public override void OnActionExecuted(ActionExecutedContext context)
@@ -39,9 +45,12 @@ public class KeranjangController : Controller
 
     public async Task<IActionResult> Index()
     {
+        int idCustomer = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value.ToInt();
+        var result = await _keranjangService.Get(idCustomer);
 
-        var result = await _keranjangService.Get(HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value.ToInt());
+        var alamat = await _accountService.GetAlamat(idCustomer);
 
+        ViewBag.AlamatList = alamat.Select(x=> new SelectListItem(x.Item2.ToString(), x.Item1.ToString())).ToList();
         return View(result);
     }
 

@@ -29,7 +29,6 @@ namespace Trisatech.Kamlinko.WebApp.Datas
         public virtual DbSet<ProdukKategori> ProdukKategoris { get; set; } = null!;
         public virtual DbSet<StatusOrder> StatusOrders { get; set; } = null!;
         public virtual DbSet<DetailOrder> DetailOrders { get; set; } = null!;
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
@@ -79,7 +78,8 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                     .HasMaxLength(255)
                     .HasColumnName("deskripsi");
 
-                entity.Property(e => e.IdCustomer).HasColumnName("id_customer");
+                entity.Property(e => e.IdCustomer)
+                .HasColumnName("id_customer");
 
                 entity.Property(e => e.Kecamatan)
                     .HasMaxLength(100)

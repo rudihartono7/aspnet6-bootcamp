@@ -1,11 +1,34 @@
 @using System.Globalization
+@model List<Trisatech.Kamlinko.WebApp.ViewModels.OrderViewModel>
 @{
     ViewData["Title"] = "Pesanan saya";
     int i = 0;
 }
 
 <h1>Daftar pesanan</h1>
-
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">#OrderID</th>
+      <th scope="col">Status</th>
+      <th scope="col">Tgl Transaksi</th>
+      <th scope="col">Total bayar</th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (var item in Model)
+      {      
+        <tr>
+        <th scope="row">@item.Id</th>
+        <td>@Html.ActionLink(item.Status, "Detail", "Order", new {
+            id = item.Id 
+            })</td>
+        <td>@item.TglOrder.ToLongDateString() @item.TglOrder.ToLongTimeString()</td>
+        <td>@item.TotalBayar.ToString("C", new CultureInfo("id-ID"))</td>
+        </tr>   
+      }
+    </tbody>
+</table>
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function(){

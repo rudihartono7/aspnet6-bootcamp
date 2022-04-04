@@ -41,18 +41,34 @@ public class OrderController : Controller
         base.OnActionExecuted(context);
     }
 
+    public override void OnActionExecuting(ActionExecutingContext context){
+        
+        base.OnActionExecuting(context);
+    }
+
     public async Task<IActionResult> Index()
     {
-
-        var result = await _keranjangService.Get(HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value.ToInt());
+        
+        var result = await _orderService.Get(HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value.ToInt());
 
         return View(result);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Checkout()
+    public async Task<IActionResult> Checkout(CheckoutViewModel? request)
     {
+        if(request == null)
+        {
+            return BadRequest();
+        }
+
+        if(request.Alamat == 0)
+        {
+            return BadRequest();
+        }
+
+
         int idCustomer = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value.ToInt();
         var result = await _keranjangService.Get(idCustomer);
 
@@ -61,13 +77,27 @@ public class OrderController : Controller
             return BadRequest();
         }
 
+        foreach (var item in result)
+        {
+            int keranjangId = request.Id.FirstOrDefault(x=> item.Id == x);
+            
+            if(keranjangId < 1)
+            {
+                continue;
+            }
+            int jumlahBarangBaru = request.Qty[Array.IndexOf(request.Id, keranjangId)];
+
+            item.JmlBarang = jumlahBarangBaru;
+            item.Subtotal = item.HargaBarang * jumlahBarangBaru;
+        }
+
         var newOrder = new Order();
 
         newOrder.IdCustomer = idCustomer;
         newOrder.JmlBayar = result.Sum(x=>x.Subtotal);
-        newOrder.Note = string.Empty;
+        newOrder.Note = request.Note;
         newOrder.Status = 1;
-        newOrder.IdAlamat = 1;
+        newOrder.IdAlamat = request.Alamat;
         newOrder.TglTransaksi = DateTime.Now;
         newOrder.DetailOrders = new List<DetailOrder>();
 
@@ -91,6 +121,7 @@ public class OrderController : Controller
     }
 
     public IActionResult CheckoutBerhasil(){
+        
         return View();
     }
 }

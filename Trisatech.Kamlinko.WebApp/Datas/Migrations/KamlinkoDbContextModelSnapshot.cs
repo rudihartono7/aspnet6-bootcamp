@@ -181,7 +181,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 
                     b.Property<decimal>("Harga")
                         .HasPrecision(10)
-                        .HasColumnType("decimal(10)")
+                        .HasColumnType("decimal(10,30)")
                         .HasColumnName("harga");
 
                     b.Property<int>("IdOrder")
@@ -198,7 +198,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 
                     b.Property<decimal>("SubTotal")
                         .HasPrecision(10)
-                        .HasColumnType("decimal(10)")
+                        .HasColumnType("decimal(10,30)")
                         .HasColumnName("subtotal");
 
                     b.HasKey("Id");
@@ -259,7 +259,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 
                     b.Property<decimal>("Subtotal")
                         .HasPrecision(10)
-                        .HasColumnType("decimal(10)")
+                        .HasColumnType("decimal(10,30)")
                         .HasColumnName("subtotal");
 
                     b.HasKey("Id");
@@ -288,7 +288,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 
                     b.Property<decimal>("JmlBayar")
                         .HasPrecision(10)
-                        .HasColumnType("decimal(10)")
+                        .HasColumnType("decimal(10,30)")
                         .HasColumnName("jml_bayar");
 
                     b.Property<string>("Note")
@@ -338,7 +338,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 
                     b.Property<decimal>("JmlBayar")
                         .HasPrecision(10)
-                        .HasColumnType("decimal(10)")
+                        .HasColumnType("decimal(10,30)")
                         .HasColumnName("jml_bayar");
 
                     b.Property<string>("Metode")
@@ -354,7 +354,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 
                     b.Property<decimal>("Pajak")
                         .HasPrecision(10)
-                        .HasColumnType("decimal(10)")
+                        .HasColumnType("decimal(10,30)")
                         .HasColumnName("pajak");
 
                     b.Property<string>("Status")
@@ -405,7 +405,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 
                     b.Property<decimal>("Ongkir")
                         .HasPrecision(10)
-                        .HasColumnType("decimal(10)")
+                        .HasColumnType("decimal(10,30)")
                         .HasColumnName("ongkir");
 
                     b.Property<string>("Status")
@@ -444,7 +444,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 
                     b.Property<decimal>("Harga")
                         .HasPrecision(10)
-                        .HasColumnType("decimal(10)")
+                        .HasColumnType("decimal(10,30)")
                         .HasColumnName("harga");
 
                     b.Property<string>("Nama")

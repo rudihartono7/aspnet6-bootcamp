@@ -24,6 +24,11 @@ public class AccountService : BaseDbService, IAccountService
         return await DbContext.Customers.FirstOrDefaultAsync(x=>x.Username == username && x.Password == password);
     }
 
+    public async Task<List<Tuple<int, string>>> GetAlamat(int idCustomer){
+        return await DbContext.Alamats.Where(x=>x.IdCustomer == idCustomer)
+        .Select(x => new Tuple<int, string>(x.Id, x.Deskripsi))
+        .ToListAsync();
+    }
     public async Task<Customer> Register(RegisterViewModel request){
         //check username sudah ada atau belum di db
         if(await DbContext.Customers.AnyAsync(x=>x.Username == request.Username)){

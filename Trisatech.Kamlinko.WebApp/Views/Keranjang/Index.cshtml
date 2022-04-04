@@ -16,6 +16,7 @@
             </p>
         </div>
         <div class="row">
+            <form asp-controller="Order" asp-action="Checkout">
             <table class="table">
                 <thead>
                     <tr class="text-nowrap">
@@ -35,19 +36,19 @@
                             <td>@item.NamaProduk</td>
                             <td> <img src="~/@item.Image" height="100" /></td>
                             <td>
-                                <form class="update-keranjang" asp-action="Edit" asp-controller="Keranjang" method="post">
                                     <input type="hidden" name="Id" value="@item.Id" />
-                                    <input type="number" name="JmlBarang" value="@item.JmlBarang" />
-                                </form>
-                                @item.JmlBarang
+                                    <input type="number" name="Qty" value="@item.JmlBarang" />
                                 </td>
                             <td>@item.Subtotal.ToString("C", new CultureInfo("id-ID"))</td>
                         </tr>
                     }
                 </tbody>
             </table>
-            <form asp-controller="Order" asp-action="Checkout">
-                <button type="submit">Submit</button>
+            <label>Pilih Alamat Pengiriman</label>
+            <select name="Alamat" asp-items="@ViewBag.AlamatList"></select>
+                <br />
+                <button type="submit" name="Action" value="Checkout">Checkout</button>                
+                <button type="submit" name="Action" value="Simpan">Simpan</button>
             </form>
         </div>
     </div>
