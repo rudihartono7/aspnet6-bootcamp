@@ -1,33 +1,17 @@
 @using System.Globalization
 @model List<Trisatech.Kamlinko.WebApp.ViewModels.OrderViewModel>
 @{
-    ViewData["Title"] = "Daftar Pesanan";
-    Layout = "_AdminLayout";
+    ViewData["Title"] = "Pesanan saya";
     int i = 0;
 }
 
-<div class="row">
-  <form asp-action="Index" asp-controller="Order">
-  <div class="col-md-4">
-    <input type="date" name="date" value="@ViewBag.FilterDate">@ViewBag.FilterDate</input>
-  </div>
-  <div class="col-md-4">
-    <select asp-items="@ViewBag.StatusList" name="status">
-
-    </select>
-  </div>
-  <div class="col-md-4">
-    <input type="submit" value="Cari" />
-  </div>
-  </form>
-</div>
-<table class="table">
+<h1>Daftar pesanan</h1>
+<table class="table table-dark">
   <thead>
     <tr>
       <th scope="col">#OrderID</th>
-      <th scope="col">No Transaksi</th>
-      <th scope="col">Tgl Transaksi</th>
       <th scope="col">Status</th>
+      <th scope="col">Tgl Transaksi</th>
       <th scope="col">Total bayar</th>
     </tr>
   </thead>
@@ -36,11 +20,10 @@
       {      
         <tr>
         <th scope="row">@item.Id</th>
-        <td>@Html.ActionLink(string.Format("#{0}-{1}", item.Id, item.TglOrder.ToShortDateString()), "Detail", "Order", new {
+        <td>@Html.ActionLink(item.Status, "Detail", "Order", new {
             id = item.Id 
             })</td>
         <td>@item.TglOrder.ToLongDateString() @item.TglOrder.ToLongTimeString()</td>
-        <td>@item.Status</td>
         <td>@item.TotalBayar.ToString("C", new CultureInfo("id-ID"))</td>
         </tr>   
       }

@@ -6,10 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Trisatech.Kamlinko.WebApp.Interfaces;
+using Trisatech.Kamlinko.WebApp.Helpers;
 
 namespace Trisatech.Kamlinko.WebApp.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IProdukService _produkService;
@@ -19,17 +20,6 @@ public class HomeController : Controller
         _logger = logger;
         _produkService = produkService;
     }
-
-    public override void OnActionExecuted(ActionExecutedContext context)
-    {
-        if(HttpContext.User == null || HttpContext.User.Identity == null){
-            ViewBag.IsLogged = false;
-        } else {
-            ViewBag.IsLogged = HttpContext.User.Identity.IsAuthenticated;
-        }
-
-        base.OnActionExecuted(context);
-    }
     
     //page = number untuk halaman ke - n
     //page count = jumlah data yang ditampilkan per halaman
@@ -37,21 +27,11 @@ public class HomeController : Controller
     {
         var viewModels = new List<ProdukViewModel>();
 
-        int limit = 2;
-        if(pageCount != null)
-        {
-            limit = pageCount.Value;
-        }
+        var tuplePagination = Common.ToLimitOffset(page, pageCount);
 
-        int offset = 0;
-        if(page == null) 
-        {
-            offset = 0;
-        }else{
-            offset = (page.Value - 1) * limit;
-        }
-
-        var dbResult = await _produkService.Get(limit, offset, string.Empty);
+        var dbResult = await _produkService.Get(tuplePagination.Item1, 
+        tuplePagination.Item2, 
+        string.Empty);
         
         if(dbResult == null || !dbResult.Any())
         {

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Trisatech.Kamlinko.WebApp.Controllers;
 
 [Authorize(Roles = AppConstant.CUSTOMER)]
-public class KeranjangController : Controller
+public class KeranjangController : BaseController
 {
     private readonly ILogger<KeranjangController> _logger;
     private readonly IKeranjangService _keranjangService;
@@ -27,20 +27,6 @@ public class KeranjangController : Controller
         _logger = logger;
         _keranjangService = keranjangService;
         _accountService = accountService;
-    }
-
-    public override void OnActionExecuted(ActionExecutedContext context)
-    {
-        if (HttpContext.User == null || HttpContext.User.Identity == null)
-        {
-            ViewBag.IsLogged = false;
-        }
-        else
-        {
-            ViewBag.IsLogged = HttpContext.User.Identity.IsAuthenticated;
-        }
-
-        base.OnActionExecuted(context);
     }
 
     public async Task<IActionResult> Index()

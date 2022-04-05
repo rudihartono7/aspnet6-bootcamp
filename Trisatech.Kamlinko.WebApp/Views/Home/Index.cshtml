@@ -49,14 +49,14 @@
         
         @Html.ActionLink("Sebelumnya", "Index", "Home", new {
             page = halamanSekarang == 1 ? 1 : halamanSekarang - 1,
-            pageCount = 2
+            pageCount = AppConstant.DEFAULT_PAGE_COUNT
         })
 
         <p>Page : @halamanSekarang</p>
 
         @Html.ActionLink("Selanjutnya", "Index", "Home", new {
-            page = Model.Count < 2 ? halamanSekarang : halamanSekarang + 1,
-            pageCount = 2
+            page = Model.Count < AppConstant.DEFAULT_PAGE_COUNT ? halamanSekarang : halamanSekarang + 1,
+            pageCount = AppConstant.DEFAULT_PAGE_COUNT
         })
 
         </div>

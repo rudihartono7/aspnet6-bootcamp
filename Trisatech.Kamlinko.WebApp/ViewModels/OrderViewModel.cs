@@ -10,6 +10,7 @@ public class OrderViewModel {
         return (Details == null || !Details.Any()) ? 0 : Details.Sum(x=>x.Qty);
     }}
     public decimal TotalBayar { get; set; }
+    public int IdStatus {get; set;}
     public string Status { get; set; }
 
     public List<OrderDetailViewModel> Details { get; set; }

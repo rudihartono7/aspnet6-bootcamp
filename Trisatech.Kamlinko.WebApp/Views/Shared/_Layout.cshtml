@@ -49,11 +49,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Produk"
-                                asp-action="Index">Produk</a>
-                        </li>
-                        @if (ViewBag.IsLogged != null && ViewBag.IsLogged)
+                        @if (ViewBag.IsLogged != null && ViewBag.IsLogged && ViewBag.IsCustomer != null && ViewBag.IsCustomer)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Keranjang"
@@ -62,7 +58,7 @@
                             
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Order"
-                                asp-action="Index">Pesanan saya</a>
+                                asp-action="MyOrder">Pesanan saya</a>
                             </li>
                         }
                         <li class="nav-item">

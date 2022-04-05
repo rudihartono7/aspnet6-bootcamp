@@ -9,36 +9,27 @@ using Trisatech.Kamlinko.WebApp.Interfaces;
 using System.Security.Claims;
 using Trisatech.Kamlinko.WebApp.Helpers;
 using Trisatech.Kamlinko.WebApp.Datas.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Trisatech.Kamlinko.WebApp.Controllers;
 
-[Authorize(Roles = AppConstant.CUSTOMER)]
-public class OrderController : Controller
+[Authorize]
+public class OrderController : BaseController
 {
     private readonly ILogger<OrderController> _logger;
     private readonly IKeranjangService _keranjangService;
     private readonly IOrderService _orderService;
+    private readonly IStatusService _statusService;
 
-    public OrderController(ILogger<OrderController> logger, IKeranjangService keranjangService,
-    IOrderService orderService)
+    public OrderController(ILogger<OrderController> logger, 
+    IKeranjangService keranjangService,
+    IOrderService orderService,
+    IStatusService statusService)
     {
         _logger = logger;
         _keranjangService = keranjangService;
         _orderService = orderService;
-    }
-
-    public override void OnActionExecuted(ActionExecutedContext context)
-    {
-        if (HttpContext.User == null || HttpContext.User.Identity == null)
-        {
-            ViewBag.IsLogged = false;
-        }
-        else
-        {
-            ViewBag.IsLogged = HttpContext.User.Identity.IsAuthenticated;
-        }
-
-        base.OnActionExecuted(context);
+        _statusService = statusService;
     }
 
     public override void OnActionExecuting(ActionExecutingContext context){
@@ -46,11 +37,52 @@ public class OrderController : Controller
         base.OnActionExecuting(context);
     }
 
-    public async Task<IActionResult> Index()
+    [Authorize(Roles = AppConstant.ADMIN)]
+    public async Task<IActionResult> Index(int? page, int? pageCount)
     {
-        
-        var result = await _orderService.Get(HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value.ToInt());
+        var tuplePagination = Common.ToLimitOffset(page, pageCount);
 
+        var result = await _orderService.GetV3(tuplePagination.Item1, tuplePagination.Item2);
+
+        await SetStatusListAsSelectListItem();
+        ViewBag.FilterDate = null;
+
+        return View(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Index([FromQuery]int? page, [FromQuery]int? pageCount, int? status, DateTime? date)
+    {
+        var tuplePagination = Common.ToLimitOffset(page, pageCount);
+
+        var result = await _orderService.GetV3(tuplePagination.Item1, tuplePagination.Item2, status, date);
+    
+        await SetStatusListAsSelectListItem(status);
+        if(date != null)
+        {
+            ViewBag.FilterDate = date.Value.ToString("MM/dd/yyyy");
+        }
+        return View(result);
+    }
+
+    private async Task SetStatusListAsSelectListItem(int? status = null){
+        var statusList = await _statusService.Get();
+
+        if(statusList == null || !statusList.Any()){
+            ViewBag.StatusList = new List<SelectListItem>();
+        }else{
+            ViewBag.StatusList = statusList.Select(x=> new SelectListItem {
+                Value = x.Id.ToString(),
+                Text = x.Nama,
+                Selected = status != null && status.Value == x.Id
+            }).ToList();
+        }
+    }
+
+    [Authorize(Roles = AppConstant.CUSTOMER)]
+    public async Task<IActionResult> MyOrder(){
+        var result = await _orderService.Get(HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value.ToInt());
+    
         return View(result);
     }
 

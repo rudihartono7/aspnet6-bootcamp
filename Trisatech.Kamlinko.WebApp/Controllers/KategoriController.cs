@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Trisatech.Kamlinko.WebApp.Controllers;
 
 [Authorize(Roles = AppConstant.ADMIN)]
-public class KategoriController : Controller
+public class KategoriController : BaseController
 {
     private readonly IKategoriService _kategoriService;
     private readonly ILogger<KategoriController> _logger;

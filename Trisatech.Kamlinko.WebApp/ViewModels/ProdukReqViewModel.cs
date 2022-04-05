@@ -21,7 +21,7 @@ public class ProdukReqViewModel : ProdukBaseViewModel
     [Required]
     public new string Nama { get; set; } = null!;
     public string Deskripsi { get; set; } = null!;
-    [Required]
+    [Required(ErrorMessage = "Harganya harus diisi pak")]
     public new decimal Harga { get; set; }
     public int Stok { get; set; }
     public IFormFile? GambarFile { get; set; }
