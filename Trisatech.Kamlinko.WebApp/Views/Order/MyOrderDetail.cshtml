@@ -1,0 +1,130 @@
+@using System.Globalization
+@using Trisatech.Kamlinko.WebApp.Helpers
+@model Trisatech.Kamlinko.WebApp.ViewModels.OrderViewModel
+@{
+    ViewData["Title"] = "Detail Pesanan";
+    int i = 0;
+}
+
+<table border="1">
+    <tbody>
+        <tr>
+            <td>Nomor Order</td>
+            <td>@Model.Id</td>
+            <td>Status</td>
+            <td>@Model.Status</td>
+        </tr>
+        <tr>
+            <td>Tgl Order</td>
+            <td>@Model.TglOrder.ToLongDateString() @Model.TglOrder.ToShortTimeString()</td>
+            <td>Total Bayar</td>
+            <td>@Model.TotalBayar.ToIDR()
+                <br />
+                Ongkir Rp. 11.000,00
+                <br />
+                Total Bayar Rp. @(Model.TotalBayar + 11000)
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
+
+<h1>Daftar Item</h1>
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">#No</th>
+      <th scope="col">Nama Produk</th>
+      <th scope="col">Harga</th>
+      <th scope="col">Jumlah</th>
+      <th scope="col">Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (var item in Model.Details)
+      {      
+          i++;
+        <tr>
+        <th scope="row">@i</th>
+        <th scope="row">@item.Id</th>
+        <td>@item.Produk</td>
+        <td>@item.Harga.ToIDR()</td>
+        <td>@item.Qty</td>
+        <td>@item.SubTotal.ToIDR()</td>
+        </tr>   
+      }
+    </tbody>
+</table>
+
+<p>
+Informasi Pembaran:
+<br />
+Method : Transfer
+<br />
+Bank: MANDIRI
+<br />
+Bank Account: 12421421424
+<br />
+Bank Account Name: Rudi DotNet
+</p>
+@if(Model.IdStatus == AppConstant.StatusOrder.MASUK)
+{
+    <form asp-action="bayar" asp-controller="Order" enctype="multipart/form-data">
+        <input type="hidden" name="IdOrder" value="@Model.Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group mb-3">
+            <label for="TglBayar" class="control-label">Pilih Tgl Bayar</label>
+            <input name="TglBayar" type="date" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="JmlBayar" class="control-label">Total Bayar</label>
+            <input name="JmlBayar" type="number" class="form-control" readonly value="@(Model.TotalBayar + 11000)" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="Method" class="control-label">Metode Bayar</label>
+            <input name="Method" type="text" class="form-control" value="Bank Transfer" readonly />
+        </div>
+        <div class="form-group mb-3">
+            <label for="IdTujuan" class="control-label">Tujuan Pembayaran</label>
+            <input name="IdTujuan" type="text" class="form-control" readonly value="12421421424" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="FileBuktiBayar" class="control-label">Upload Bukti Bayar</label>
+            <input name="FileBuktiBayar" type="file" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+            <label for="Note" class="control-label">Catatan</label>
+            <input name="Note" type="text" class="form-control" />
+        </div>
+        <button class="btn btn-primary" type="submit">Kirim</button>
+    </form>
+} else {
+    <table>
+    <tbody>
+        <tr>
+            <td>Tgl Bayar</td>
+            <td>@Model.Pembayaran.TglBayar.ToLongDateString() @Model.Pembayaran.TglBayar.ToShortTimeString()</td>
+            <td>Method Bayar</td>
+            <td>@Model.Pembayaran.Metode</td>
+        </tr>
+        <tr>
+            <td>Total Bayar</td>
+            <td>@Model.Pembayaran.JmlBayar.ToIDR()</td>
+            <td>ID Tujuan Pembayaran</td>
+            <td>@Model.Pembayaran.IdTujuan</td>
+        </tr>
+        <tr>
+            <td>Bukti Pembayaran</td>
+            <td><img src="~/@Model.Pembayaran.FileBuktiBayar" height="250" /></td>
+        </tr>
+    </tbody>
+</table>
+
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+        });
+    </script>
+}

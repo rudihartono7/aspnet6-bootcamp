@@ -14,7 +14,7 @@
 `server=localhost;user=root;password=root123;database=kamlinkodb`
 
 6. jalankan command untuk reverse
-`dotnet ef dbcontext scaffold "server=localhost;user=root;password=root123;database=kamlinkodb" Pomelo.EntityFrameworkCore.MySql --context-dir Datas --output-dir "Datas/Entities"`
+`dotnet ef dbcontext scaffold "server=localhost;user=root;password=root123;database=kamlinkodb" Pomelo.EntityFrameworkCore.MySql --context-dir Datas --output-dir "Datas/Entities" --force`
 
 
 

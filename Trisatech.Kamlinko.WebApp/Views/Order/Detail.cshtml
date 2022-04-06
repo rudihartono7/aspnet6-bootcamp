@@ -1,0 +1,139 @@
+@using System.Globalization
+@using Trisatech.Kamlinko.WebApp.Helpers
+@model Trisatech.Kamlinko.WebApp.ViewModels.OrderViewModel
+@{
+    ViewData["Title"] = "Detail Pesanan";
+    int i = 0;
+}
+
+<table border="1">
+    <tbody>
+        <tr>
+            <td>Nomor Order</td>
+            <td>@Model.Id</td>
+            <td>Status</td>
+            <td>@Model.Status</td>
+        </tr>
+        <tr>
+            <td>Tgl Order</td>
+            <td>@Model.TglOrder.ToLongDateString() @Model.TglOrder.ToShortTimeString()</td>
+            <td>Total Bayar</td>
+            <td>@Model.TotalBayar.ToIDR()
+                <br />
+                Ongkir Rp. 11.000,00
+                <br />
+                Total Bayar Rp. @(Model.TotalBayar + 11000)
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
+
+<h1>Daftar Item</h1>
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">#No</th>
+      <th scope="col">Nama Produk</th>
+      <th scope="col">Harga</th>
+      <th scope="col">Jumlah</th>
+      <th scope="col">Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach (var item in Model.Details)
+      {      
+          i++;
+        <tr>
+        <th scope="row">@i</th>
+        <th scope="row">@item.Id</th>
+        <td>@item.Produk</td>
+        <td>@item.Harga.ToIDR()</td>
+        <td>@item.Qty</td>
+        <td>@item.SubTotal.ToIDR()</td>
+        </tr>   
+      }
+    </tbody>
+</table>
+
+<p>
+Informasi Pembaran:
+<br />
+Method : Transfer
+<br />
+Bank: MANDIRI
+<br />
+Bank Account: 12421421424
+<br />
+Bank Account Name: Rudi DotNet
+</p>
+@if(Model.IdStatus != AppConstant.StatusOrder.MASUK)
+{
+    <table>
+    <tbody>
+        <tr>
+            <td>Tgl Bayar</td>
+            <td>@Model.Pembayaran.TglBayar.ToLongDateString() @Model.Pembayaran.TglBayar.ToShortTimeString()</td>
+            <td>Method Bayar</td>
+            <td>@Model.Pembayaran.Metode</td>
+        </tr>
+        <tr>
+            <td>Total Bayar</td>
+            <td>@Model.Pembayaran.JmlBayar.ToIDR()</td>
+            <td>ID Tujuan Pembayaran</td>
+            <td>@Model.Pembayaran.IdTujuan</td>
+        </tr>
+        <tr>
+            <td>Bukti Pembayaran</td>
+            <td><img src="~/@Model.Pembayaran.FileBuktiBayar" height="250" /></td>
+        </tr>
+    </tbody>
+</table>
+
+
+if(@Model.IdStatus == AppConstant.StatusOrder.DIBAYAR)
+{
+    <form asp-controller="order" asp-action="konfirmasi">
+        <input type="hidden" name="IdOrder" value="@Model.Id" />
+        <button type="submit">Konfirmasi</button>
+    </form>
+} else if(@Model.IdStatus == AppConstant.StatusOrder.DIPROSES)
+{
+    <form asp-controller="order" asp-action="kirim">
+        <input type="hidden" name="IdOrder" value="@Model.Id" />
+        <input type="hidden" name="IdAlamat" value="@Model.IdAlamat" />
+        <div class="form-group mb-3">
+            <label for="Ongkir" class="control-label">Ongkir</label>
+            <input name="Ongkir" type="number" class="form-control" />
+        </div>
+
+                <div class="form-group mb-3">
+            <label for="Kurir" class="control-label">Kurir</label>
+            <input name="Kurir" type="text" class="form-control" />
+        </div>
+
+                <div class="form-group mb-3">
+            <label for="NoResi" class="control-label">No Resi</label>
+            <input name="NoResi" type="text" class="form-control" />
+        </div>
+
+                <div class="form-group mb-3">
+            <label for="Keterangan" class="control-label">Keterangan</label>
+            <input name="Keterangan" type="text" class="form-control" />
+        </div>
+        
+        <button class="btn btn-primary" type="submit">Kirim</button>
+    </form>
+}else if(@Model.IdStatus == AppConstant.StatusOrder.DIKIRIM){
+    <p>Sudah dikirim</p>
+}
+} else {
+    <p>Belum dibayar</p>
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+        });
+    </script>
+}

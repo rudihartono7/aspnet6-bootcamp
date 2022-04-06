@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Trisatech.Kamlinko.WebApp.Helpers;
 public static class  Common
 {
@@ -11,6 +13,10 @@ public static class  Common
 
     public static string ToEmpty(this string content){
         return "";
+    }
+
+    public static string ToIDR(this decimal val){
+        return val.ToString("C", new CultureInfo("id-ID"));
     }
 
     public static int ToInt(this string content){

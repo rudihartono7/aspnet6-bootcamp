@@ -8,6 +8,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Entities
         public int Id { get; set; }
         public int IdOrder { get; set; }
         public string Kurir { get; set; } = null!;
+        public string NoResi { get; set; } = null!;
         public decimal Ongkir { get; set; }
         public int IdAlamat { get; set; }
         public string Status { get; set; } = null!;

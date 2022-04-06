@@ -317,6 +317,10 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                     .HasColumnType("datetime")
                     .HasColumnName("tgl_bayar");
 
+                entity.Property(e => e.FileBuktiBayar)
+                    .HasMaxLength(255)
+                    .HasColumnName("file_bukti_bayar");
+
                 entity.HasOne(d => d.IdCustomerNavigation)
                     .WithMany(p => p.Pembayarans)
                     .HasForeignKey(d => d.IdCustomer)
@@ -359,6 +363,10 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                 entity.Property(e => e.Status)
                     .HasMaxLength(100)
                     .HasColumnName("status");
+
+                entity.Property(e => e.NoResi)
+                    .HasMaxLength(100)
+                    .HasColumnName("no_resi");
 
                 entity.HasOne(d => d.IdAlamatNavigation)
                     .WithMany(p => p.Pengirimen)

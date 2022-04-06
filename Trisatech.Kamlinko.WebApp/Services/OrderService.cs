@@ -48,6 +48,7 @@ public class OrderService : BaseDbService, IOrderService
         return result;
     }
 
+#region  Get Order List
     public async Task<List<OrderViewModel>> GetV3(int limit, int offset, int? status = null, DateTime? date = null)
     {
         
@@ -154,4 +155,147 @@ public class OrderService : BaseDbService, IOrderService
                                 .Take(limit).ToListAsync();
     }
 
+#endregion
+    public async Task<OrderViewModel> GetDetail(int idCustomer, int idOrder)
+    {
+        var result = await (from a in DbContext.Orders
+        //inner join
+        join b in DbContext.StatusOrders on a.Status equals b.Id
+        join alamat in DbContext.Alamats on a.IdAlamat equals alamat.Id
+        //end join
+        //left join
+        join pembayaran in DbContext.Pembayarans on a.Id equals pembayaran.IdOrder into tempPembayaran
+        from pembayaran in tempPembayaran.DefaultIfEmpty()
+        //end join
+        where a.IdCustomer == idCustomer && a.Id == idOrder
+        select new OrderViewModel
+        {
+            Id = a.Id,
+            Status = b.Nama,
+            IdStatus = b.Id,
+            TglOrder = a.TglTransaksi,
+            TotalBayar = a.JmlBayar,
+
+            //mendapatkan data detail item order
+            Details = (from c in DbContext.DetailOrders
+                join d in DbContext.Produks on c.IdProduk equals d.Id
+                where c.IdOrder == a.Id
+                select new OrderDetailViewModel
+                {
+                    Id = c.Id,
+                    Produk = d.Nama,
+                    Harga = c.Harga,
+                    Qty = c.JmlBarang,
+                    SubTotal = c.SubTotal
+                }).ToList(),
+
+            //mendapatkan data pembayaran jika sudah ada 
+            Pembayaran = pembayaran == null ? new PembayaranViewModel() : new PembayaranViewModel{
+                Id = pembayaran.Id,
+                Metode = pembayaran.Metode,
+                IdTujuan = pembayaran.IdTujuan,
+                JmlBayar = pembayaran.JmlBayar,
+                Note = pembayaran.Note,
+                Pajak = pembayaran.Pajak,
+                Status = pembayaran.Status,
+                TglBayar = pembayaran.TglBayar,
+                FileBuktiBayar = pembayaran.FileBuktiBayar
+            }
+        }).FirstOrDefaultAsync();
+
+        return result;
+    }
+
+    public async Task<OrderViewModel> GetDetail(int idOrder)
+    {
+        var result = await (from a in DbContext.Orders
+        //inner join
+        join b in DbContext.StatusOrders on a.Status equals b.Id
+        join alamat in DbContext.Alamats on a.IdAlamat equals alamat.Id
+        //end join
+        //left join
+        join pembayaran in DbContext.Pembayarans on a.Id equals pembayaran.IdOrder into tempPembayaran
+        from pembayaran in tempPembayaran.DefaultIfEmpty()
+        //end join
+        where a.Id == idOrder
+        select new OrderViewModel
+        {
+            Id = a.Id,
+            Status = b.Nama,
+            IdStatus = b.Id,
+            TglOrder = a.TglTransaksi,
+            TotalBayar = a.JmlBayar,
+            Alamat = alamat.Deskripsi,
+            IdAlamat = alamat.Id,
+            //mendapatkan data detail item order
+            Details = (from c in DbContext.DetailOrders
+                join d in DbContext.Produks on c.IdProduk equals d.Id
+                where c.IdOrder == a.Id
+                select new OrderDetailViewModel
+                {
+                    Id = c.Id,
+                    Produk = d.Nama,
+                    Harga = c.Harga,
+                    Qty = c.JmlBarang,
+                    SubTotal = c.SubTotal
+                }).ToList(),
+
+            //mendapatkan data pembayaran jika sudah ada 
+            Pembayaran = pembayaran == null ? new PembayaranViewModel() : new PembayaranViewModel{
+                Id = pembayaran.Id,
+                Metode = pembayaran.Metode,
+                IdTujuan = pembayaran.IdTujuan,
+                JmlBayar = pembayaran.JmlBayar,
+                Note = pembayaran.Note,
+                Pajak = pembayaran.Pajak,
+                Status = pembayaran.Status,
+                TglBayar = pembayaran.TglBayar,
+                FileBuktiBayar = pembayaran.FileBuktiBayar
+            }
+        }).FirstOrDefaultAsync();
+
+        return result;
+    }
+
+    public async Task UpdateStatus(int idOrder, short dIBAYAR)
+    {
+        var order = await DbContext.Orders.FirstOrDefaultAsync(x=>x.Id == idOrder);
+
+        if(order == null)
+        {
+            throw new ArgumentNullException("Data order tidak ditemukan");
+        }
+
+        order.Status = dIBAYAR;
+
+        DbContext.Update(order);
+        await DbContext.SaveChangesAsync();
+    }
+
+    public async Task Bayar(Pembayaran newBayar)
+    {
+        if(await DbContext.Pembayarans.AnyAsync(x=>x.IdOrder == newBayar.IdOrder))
+        {
+            throw new InvalidOperationException("Pembayaran sudah dilakukan");
+        }
+
+        await DbContext.AddAsync(newBayar);
+        await DbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> SudahDibayar(int idOrder)
+    {
+        return await DbContext.Orders.AnyAsync(x=>x.Id == idOrder && x.Status == AppConstant.StatusOrder.DIBAYAR);
+    }
+
+    public async Task Kirim(Pengiriman dataPengiriman)
+    {
+        if(await DbContext.Pengirimen.AnyAsync(x=>x.IdOrder == dataPengiriman.IdOrder))
+        {
+            throw new InvalidOperationException("Pengiriman sudah dilakukan");
+        }
+
+        await DbContext.AddAsync(dataPengiriman);
+        await DbContext.SaveChangesAsync();
+    }
 }

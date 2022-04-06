@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Trisatech.Kamlinko.WebApp.Datas;
 
@@ -10,9 +11,10 @@ using Trisatech.Kamlinko.WebApp.Datas;
 namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 {
     [DbContext(typeof(KamlinkoDbContext))]
-    partial class KamlinkoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220406030302_AlterTablePembayaran")]
+    partial class AlterTablePembayaran
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -407,12 +409,6 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("kurir");
-
-                    b.Property<string>("NoResi")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("no_resi");
 
                     b.Property<decimal>("Ongkir")
                         .HasPrecision(10)

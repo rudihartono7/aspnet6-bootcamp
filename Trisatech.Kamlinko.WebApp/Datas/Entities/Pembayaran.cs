@@ -15,6 +15,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Entities
         public string Status { get; set; } = null!;
         public string? Note { get; set; }
         public string IdTujuan { get; set; } = null!;
+        public string? FileBuktiBayar { get; set; }
 
         public virtual Customer IdCustomerNavigation { get; set; } = null!;
         public virtual Order IdOrderNavigation { get; set; } = null!;

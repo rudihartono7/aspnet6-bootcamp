@@ -12,6 +12,9 @@ public class OrderViewModel {
     public decimal TotalBayar { get; set; }
     public int IdStatus {get; set;}
     public string Status { get; set; }
+    public int IdAlamat { get; set; }
+    public string Alamat { get; set; }
 
     public List<OrderDetailViewModel> Details { get; set; }
+    public PembayaranViewModel Pembayaran { get; set; }
 }
