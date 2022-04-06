@@ -45,8 +45,7 @@
       {      
           i++;
         <tr>
-        <th scope="row">@i</th>
-        <th scope="row">@item.Id</th>
+        <td scope="row">@i</td>
         <td>@item.Produk</td>
         <td>@item.Harga.ToIDR()</td>
         <td>@item.Qty</td>
@@ -67,6 +66,7 @@ Bank Account: 12421421424
 <br />
 Bank Account Name: Rudi DotNet
 </p>
+
 @if(Model.IdStatus == AppConstant.StatusOrder.MASUK)
 {
     <form asp-action="bayar" asp-controller="Order" enctype="multipart/form-data">
@@ -121,6 +121,58 @@ Bank Account Name: Rudi DotNet
 </table>
 
 }
+
+@if(Model.IdStatus == AppConstant.StatusOrder.DIKIRIM || Model.IdStatus == AppConstant.StatusOrder.DITERIMA){
+    <table>
+    <tbody>
+        
+        <tr>
+            <td>No. Resi</td>
+            <td>@Model.Pengiriman.NoResi</td>
+        </tr>
+        <tr>
+            <td>Kurir</td>
+            <td>@Model.Pengiriman.Kurir</td>
+        </tr>
+        <tr>
+            <td>Ongkir</td>
+            <td>@Model.Pengiriman.Ongkir.ToIDR()</td>
+        </tr>
+        <tr>
+            <td>Keterangna</td>
+            <td>@Model.Pengiriman.Keterangan</td>
+        </tr>
+    </tbody>
+</table>
+
+@if(Model.IdStatus == AppConstant.StatusOrder.DIKIRIM)
+
+{
+    <form asp-action="review" asp-controller="order" enctype="multipart/form-data">
+    <input type="hidden" name="IdOrder" value="@Model.Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="form-group mb-3">
+            <label for="Komentar" class="control-label">Ulas produk</label>
+            <input name="Komentar" type="text" class="form-control" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="Rating" class="control-label">kasih bintang kakak</label>
+            <input name="Rating" type="number" maxlength="5" minlength="1" class="form-control" />
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="Gambar" class="control-label">Upload gambar produk mu</label>
+            <input name="Gambar" type="file" class="form-control" />
+        </div>
+
+        <button class="btn btn-primary">Kirim</button>
+        
+</form>
+}
+}
+
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function(){

@@ -288,6 +288,44 @@ public class OrderController : BaseController
         });
     }
 
+    public async Task<IActionResult> Review(UlasanRequestViewModel request)
+    {
+        int idCustomer = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value.ToInt();
+
+        string fileName = string.Empty;
+        
+        if (request.Gambar != null)
+        {
+            fileName = $"{Guid.NewGuid()}-{request.Gambar?.FileName}";
+
+            string filePathName = _iWebHost.WebRootPath + "\\images\\" + fileName;
+
+            using (var streamWriter = System.IO.File.Create(filePathName))
+            {
+                //await streamWriter.WriteAsync(Common.StreamToBytes(request.GambarFile.OpenReadStream()));
+                //using extension to convert stream to bytes
+                await streamWriter.WriteAsync(request.Gambar.OpenReadStream().ToBytes());
+            }
+        }
+
+        Ulasan ulasan = new Ulasan{
+            IdOrder = request.IdOrder,
+            IdCustomer = idCustomer,
+            Komentar = request.Komentar,
+            Rating = request.Rating,
+            Gambar = string.IsNullOrEmpty(fileName) ? string.Empty : "images/" + fileName
+        };
+
+
+        await _orderService.Ulas(ulasan);
+
+        await _orderService.UpdateStatus(request.IdOrder, AppConstant.StatusOrder.DITERIMA);
+
+        return RedirectToAction(nameof(MyOrderDetail), new {
+            id = request.IdOrder
+        });
+    }
+
     public IActionResult CheckoutBerhasil()
     {
 

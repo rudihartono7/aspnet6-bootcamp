@@ -17,4 +17,5 @@ public class OrderViewModel {
 
     public List<OrderDetailViewModel> Details { get; set; }
     public PembayaranViewModel Pembayaran { get; set; }
+    public PengirimanViewModel Pengiriman { get; set; }
 }

@@ -15,4 +15,5 @@ public interface IOrderService
     Task<OrderViewModel> GetDetail(int value);
     Task<bool> SudahDibayar(int idOrder);
     Task Kirim(Pengiriman dataPengiriman);
+    Task Ulas(Ulasan ulasan);
 }

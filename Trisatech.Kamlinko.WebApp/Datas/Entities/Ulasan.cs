@@ -2,8 +2,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Entities;
 public class Ulasan {
     public Ulasan()
     {
-        Order = new Order();
-        Customer = new Customer();
+        
     }
     public int Id { get; set; }
     public int IdOrder { get; set; }

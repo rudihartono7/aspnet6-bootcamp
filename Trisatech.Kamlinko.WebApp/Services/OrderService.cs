@@ -163,10 +163,15 @@ public class OrderService : BaseDbService, IOrderService
         join b in DbContext.StatusOrders on a.Status equals b.Id
         join alamat in DbContext.Alamats on a.IdAlamat equals alamat.Id
         //end join
+        
         //left join
         join pembayaran in DbContext.Pembayarans on a.Id equals pembayaran.IdOrder into tempPembayaran
         from pembayaran in tempPembayaran.DefaultIfEmpty()
         //end join
+
+        join pengiriman in DbContext.Pengirimen on a.Id equals pengiriman.IdOrder into tempPengiriman
+        from pengiriman in tempPengiriman.DefaultIfEmpty()
+        
         where a.IdCustomer == idCustomer && a.Id == idOrder
         select new OrderViewModel
         {
@@ -200,7 +205,17 @@ public class OrderService : BaseDbService, IOrderService
                 Status = pembayaran.Status,
                 TglBayar = pembayaran.TglBayar,
                 FileBuktiBayar = pembayaran.FileBuktiBayar
-            }
+            },
+
+            Pengiriman = pengiriman == null? new PengirimanViewModel() : new PengirimanViewModel
+                {
+                    Id = pengiriman.Id,
+                    Keterangan = pengiriman.Keterangan,
+                    Kurir = pengiriman.Kurir,
+                    NoResi = pengiriman.NoResi,
+                    Ongkir = pengiriman.Ongkir,
+                    Status = pengiriman.Status
+                }
         }).FirstOrDefaultAsync();
 
         return result;
@@ -296,6 +311,17 @@ public class OrderService : BaseDbService, IOrderService
         }
 
         await DbContext.AddAsync(dataPengiriman);
+        await DbContext.SaveChangesAsync();
+    }
+
+    public async Task Ulas(Ulasan ulasan)
+    {
+        if(await DbContext.Ulasans.AnyAsync(x=>x.IdOrder == ulasan.IdOrder))
+        {
+            throw new InvalidOperationException("Anda sudah memberikan review");
+        }
+
+        await DbContext.AddAsync(ulasan);
         await DbContext.SaveChangesAsync();
     }
 }
