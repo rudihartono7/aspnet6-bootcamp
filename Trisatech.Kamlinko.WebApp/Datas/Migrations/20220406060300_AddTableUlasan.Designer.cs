@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Trisatech.Kamlinko.WebApp.Datas;
 
@@ -10,9 +11,10 @@ using Trisatech.Kamlinko.WebApp.Datas;
 namespace Trisatech.Kamlinko.WebApp.Datas.Migrations
 {
     [DbContext(typeof(KamlinkoDbContext))]
-    partial class KamlinkoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220406060300_AddTableUlasan")]
+    partial class AddTableUlasan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

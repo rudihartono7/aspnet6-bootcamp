@@ -29,6 +29,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas
         public virtual DbSet<ProdukKategori> ProdukKategoris { get; set; } = null!;
         public virtual DbSet<StatusOrder> StatusOrders { get; set; } = null!;
         public virtual DbSet<DetailOrder> DetailOrders { get; set; } = null!;
+        public virtual DbSet<Ulasan> Ulasans { get; set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
@@ -446,6 +447,47 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                 entity.Property(e => e.Nama)
                     .HasMaxLength(50)
                     .HasColumnName("nama");
+            });
+
+            modelBuilder.Entity<Ulasan>(entity => 
+            {
+                entity.ToTable("ulasan");
+
+                entity.Property(e=>e.Id)
+                .HasColumnName("id");
+
+                entity.Property(e => e.IdOrder)
+                .HasColumnName("id_order");
+
+                entity.Property(e => e.IdCustomer)
+                .HasColumnName("id_customer");
+
+                entity.Property(e => e.Komentar)
+                .HasMaxLength(1000)
+                .HasColumnName("komentar");
+
+                entity.Property(x=> x.Gambar)
+                .HasMaxLength(100)
+                .HasColumnName("gambar");
+
+                entity.Property(e => e.Rating)
+                .HasColumnName("rating");
+
+                entity.HasIndex(e => e.IdOrder, "ulasan_fk1");
+
+                entity.HasIndex(e => e.IdCustomer, "ulasan_fk2");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.Ulasans)
+                    .HasForeignKey(d => d.IdOrder)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ulasan_fk1");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Ulasans)
+                    .HasForeignKey(d => d.IdCustomer)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("ulasan_fk2");
             });
 
             OnModelCreatingPartial(modelBuilder);
