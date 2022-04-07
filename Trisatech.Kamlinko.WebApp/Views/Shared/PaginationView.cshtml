@@ -7,7 +7,7 @@
     })
 
     <p>Page : @Model.CurrentPage</p>
-
+    
     @Html.ActionLink("Selanjutnya", Model.Action, Model.Controller, new {
         page = Model.TotalData < AppConstant.DEFAULT_PAGE_COUNT ? Model.CurrentPage : Model.CurrentPage+ 1,
         pageCount = AppConstant.DEFAULT_PAGE_COUNT

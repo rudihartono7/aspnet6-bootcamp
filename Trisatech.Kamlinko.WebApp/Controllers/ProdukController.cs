@@ -223,6 +223,39 @@ public class ProdukController : BaseController
         return View(request);
     }
 
+    public async Task<IActionResult> Datatable(object datatable)
+    {
+        var result = await _produkService.Get(int.Parse(HttpContext.Request.Query["length"]), int.Parse(HttpContext.Request.Query["start"]), string.Empty);
+
+        var totalData = await _produkService.GetAll();
+        int totalDataCount = totalData.Count();
+
+        var viewModels = new List<ProdukViewModel>();
+
+        for (int i = 0; i < result.Count; i++)
+        {
+            viewModels.Add(new ProdukViewModel
+            {
+                Id = result[i].Id,
+                Nama = result[i].Nama,
+                Gambar = result[i].Gambar,
+                Harga = result[i].Harga,
+                Kategories = result[i].ProdukKategoris.Select(x => new KategoriViewModel
+                {
+                    Id = x.IdKategori,
+                    Nama = x.IdKategoriNavigation.Nama,
+                    Icon = x.IdKategoriNavigation.Icon
+                }).ToList()
+            });
+        }
+
+        return Json(new {
+            recordsTotal = totalDataCount,
+            recordsFiltered = totalDataCount,
+            data = viewModels
+        });
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(ProdukReqViewModel request)
     {
