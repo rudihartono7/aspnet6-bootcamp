@@ -20,6 +20,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Entities
         public int IdCustomer { get; set; }
         public string? Note { get; set; }
         public int Status { get; set; }
+        public int? IdTransaksiMirror {get ;set; }
 
         public virtual Alamat IdAlamatNavigation { get; set; } = null!;
         public virtual Customer IdCustomerNavigation { get; set; } = null!;
@@ -28,5 +29,7 @@ namespace Trisatech.Kamlinko.WebApp.Datas.Entities
         public virtual ICollection<Pengiriman> Pengirimen { get; set; }
         public virtual ICollection<DetailOrder> DetailOrders { get; set; }
         public virtual ICollection<Ulasan> Ulasans { get; set; }
+
+        public virtual TrannsaksiMirror TransksiMirror {get; set; }
     }
 }
