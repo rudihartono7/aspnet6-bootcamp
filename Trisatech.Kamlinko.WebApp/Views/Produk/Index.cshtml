@@ -14,7 +14,7 @@
               <div class="card">
                 <h5 class="card-header">Responsive Table</h5>
                 <div class="table-responsive text-nowrap">
-                  <table class="table">
+                  <table id="productData" class="table">
                     <thead>
                       <tr class="text-nowrap">
                         <th>#</th>
@@ -60,3 +60,48 @@
               <!--/ Responsive Table -->
             </div>
             <!-- / Content -->
+
+
+
+<table id="productTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>deskripsi</th>
+                <th>nama</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+              <td>id</td>
+              <td>deskripsi</td>
+              <td>nama</td>
+            </tr>
+        </tfoot>
+    </table>
+
+@section Scripts {
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#productTable').DataTable( {
+        "lengthMenu": [[2, 3, 4, -1], [2, 3, 4, "All"]],
+          "processing": true,
+          "serverSide": true,
+          "ajax": "produk/datatable",
+          "columns": [
+            { "data": "id" },
+            { "data": "harga" },
+            { "data": "nama" }
+          ]
+      } );
+
+
+      $("#productData").DataTable(
+        {
+          "lengthMenu": [[2, 3, 4, -1], [2, 3, 4, "All"]]
+        }
+      );
+  } );
+  </script>
+}

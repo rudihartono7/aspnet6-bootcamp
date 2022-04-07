@@ -63,6 +63,32 @@ public class HomeController : BaseController
         return View(viewModels);
     }
 
+    public async Task<IActionResult> GetProductList(){
+        var viewModels = new List<ProdukViewModel>();
+
+
+        var dbResult = await _produkService.GetAll();
+        
+        for (int i = 0; i < dbResult.Count; i++)
+        {
+            viewModels.Add(new ProdukViewModel
+            {
+                Id = dbResult[i].Id,
+                Nama = dbResult[i].Nama,
+                Gambar = dbResult[i].Gambar,
+                Harga = dbResult[i].Harga,
+                Kategories = dbResult[i].ProdukKategoris.Select(x => new KategoriViewModel
+                {
+                    Id = x.IdKategori,
+                    Nama = x.IdKategoriNavigation.Nama,
+                    Icon = x.IdKategoriNavigation.Icon
+                }).ToList()
+            });
+        }
+
+        return Json(viewModels);
+    }
+
     public async Task<IActionResult> Produk(int? id) {
         if(id == null) 
         {

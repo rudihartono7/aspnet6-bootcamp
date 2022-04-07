@@ -1,0 +1,15 @@
+﻿@model Trisatech.Kamlinko.WebApp.ViewModels.PaginationViewModel
+
+<div>
+    @Html.ActionLink("Sebelumnya", Model.Action, Model.Controller, new {
+        page = Model.CurrentPage == 1 ? 1 : Model.CurrentPage - 1,
+        pageCount = AppConstant.DEFAULT_PAGE_COUNT
+    })
+
+    <p>Page : @Model.CurrentPage</p>
+    
+    @Html.ActionLink("Selanjutnya", Model.Action, Model.Controller, new {
+        page = Model.TotalData < AppConstant.DEFAULT_PAGE_COUNT ? Model.CurrentPage : Model.CurrentPage+ 1,
+        pageCount = AppConstant.DEFAULT_PAGE_COUNT
+    })
+</div>

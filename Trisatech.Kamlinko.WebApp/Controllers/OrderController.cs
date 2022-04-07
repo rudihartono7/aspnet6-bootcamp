@@ -50,6 +50,7 @@ public class OrderController : BaseController
 
         await SetStatusListAsSelectListItem();
         ViewBag.FilterDate = null;
+        ViewBag.HalamanSekarang = page ?? 1;
 
         return View(result);
     }

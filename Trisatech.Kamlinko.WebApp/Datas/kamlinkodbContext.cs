@@ -237,6 +237,8 @@ namespace Trisatech.Kamlinko.WebApp.Datas
 
                 entity.HasIndex(e => e.Status, "order_FK_3");
 
+                entity.HasIndex(e => e.IdTransaksiMirror, "order_FK_4");
+
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.IdAlamat).HasColumnName("id_alamat");
@@ -250,6 +252,10 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                 entity.Property(e => e.Note)
                     .HasMaxLength(255)
                     .HasColumnName("note");
+
+                entity.Property(e => e.IdTransaksiMirror)
+                    .HasColumnName("id_transaksi_mirror");
+
 
                 entity.Property(e => e.Status).HasColumnName("status");
 
@@ -274,6 +280,29 @@ namespace Trisatech.Kamlinko.WebApp.Datas
                     .HasForeignKey(d => d.Status)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("order_FK_3");
+
+                entity.HasOne(d => d.TransksiMirror)
+                    .WithOne(p => p.Order)
+                    .HasForeignKey<Order>(e => e.IdTransaksiMirror)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("order_FK_3");
+            });
+
+            modelBuilder.Entity<TrannsaksiMirror>(entity =>
+            {
+                entity.ToTable("transaksi_mirror");
+
+                entity.HasIndex(e => e.IdOrder, "transaksi_FK_1");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Nama).HasColumnName("nama");
+
+                entity.HasOne(d => d.Order)
+                    .WithOne(p => p.TransksiMirror)
+                    .HasForeignKey<TrannsaksiMirror>(e => e.IdOrder)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("order_FK_2");
             });
 
             modelBuilder.Entity<Pembayaran>(entity =>
