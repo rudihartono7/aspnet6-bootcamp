@@ -10,9 +10,12 @@ public class AlamatService : BaseDbService, IAlamatService
     {
     }
 
-    public Task<Alamat> Add(Alamat obj)
+    public async Task<Alamat> Add(Alamat obj)
     {
-        throw new NotImplementedException();
+        await DbContext.Alamats.AddAsync(obj);
+        await DbContext.SaveChangesAsync();
+
+        return obj;
     }
 
     public Task<bool> Delete(int id)

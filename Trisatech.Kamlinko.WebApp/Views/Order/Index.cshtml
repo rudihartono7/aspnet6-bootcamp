@@ -1,9 +1,11 @@
 @using System.Globalization
+@using Trisatech.Kamlinko.WebApp.ViewModels
 @model List<Trisatech.Kamlinko.WebApp.ViewModels.OrderViewModel>
 @{
     ViewData["Title"] = "Daftar Pesanan";
     Layout = "_AdminLayout";
     int i = 0;
+    int halamanSekarang = ViewBag.HalamanSekarang ?? 1;
 }
 
 <div class="row">
@@ -46,6 +48,18 @@
       }
     </tbody>
 </table>
+
+
+@{
+    Html.RenderPartial("PaginationView", new PaginationViewModel
+    {
+        Action = "Index",
+        Controller = "Order",
+        CurrentPage = halamanSekarang,
+        TotalData = Model.Count
+    });
+}
+
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function(){

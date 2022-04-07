@@ -1,4 +1,5 @@
 ﻿@using System.Globalization
+@using Trisatech.Kamlinko.WebApp.ViewModels
 @model List<Trisatech.Kamlinko.WebApp.ViewModels.ProdukViewModel>
 @{
     ViewData["Title"] = "Home Page";
@@ -46,19 +47,16 @@
             </div>        
                 }
             }
-        
-        @Html.ActionLink("Sebelumnya", "Index", "Home", new {
-            page = halamanSekarang == 1 ? 1 : halamanSekarang - 1,
-            pageCount = AppConstant.DEFAULT_PAGE_COUNT
-        })
 
-        <p>Page : @halamanSekarang</p>
-
-        @Html.ActionLink("Selanjutnya", "Index", "Home", new {
-            page = Model.Count < AppConstant.DEFAULT_PAGE_COUNT ? halamanSekarang : halamanSekarang + 1,
-            pageCount = AppConstant.DEFAULT_PAGE_COUNT
-        })
-
+            @{
+                Html.RenderPartial("PaginationView", new PaginationViewModel
+                {
+                    Action = "Index",
+                    Controller = "Home",
+                    CurrentPage = halamanSekarang,
+                    TotalData = Model.Count
+                });
+            }
         </div>
         <div class="btn-box">
             <a href="">
